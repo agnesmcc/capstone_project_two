@@ -2,7 +2,7 @@
 
 ## Description
 
-This application will be a clone of the well known website Ebay.com. It should provide basic functionality so that it resembles a crude version of the existing website. Ebay has many pages for searching, viewing, creating listings and many views for a user in their dashboard. This should give me lots of practie with creating components in React and managing state. Their will be many places where data is reused, so it will be important to reduce duplicatation and create helpers or hooks/context so that data is easily accessible from each component.
+This application will be a clone of the well known website Ebay.com. It should provide basic functionality so that it resembles a crude version of the existing website. Ebay has many pages for searching, viewing, creating listings and many views for a user in their dashboard. This should give me lots of practice with creating components in React and managing state. Their will be many places where data is reused, so it will be important to reduce duplicatation and create helpers or hooks/context so that data is easily accessible from each component.
 
 ## Stack Focus
 
@@ -22,7 +22,7 @@ Anyone that has something to sell! Similar to Ebay it should cater to a wide aud
 
 ## Data
 
-The application should allow users to create listings, but at first it will be empty. In order to exercise the ability to search and bid on other auctions it should generate some fake listings. The application willl use an API to generate this fake data so that there are some unique and realistic items to search for.
+The application should allow users to create listings, but at first it will be empty. In order to exercise the ability to search and bid on other auctions it should generate some fake listings. The application will use an API to generate this fake data so that there are some unique and realistic items to search for.
 
 ## Plan for Creating Application
 
