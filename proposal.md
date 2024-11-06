@@ -6,7 +6,7 @@ This application will be a clone of the well known website Ebay.com. It should p
 
 ## Stack Focus
 
-This project iwll include both a frontend and a backend server. I will be a React application made with create-react-app. NodeJS and Express will be made to use the backend and it will communicate with a Postgres.
+This project I wll include both a frontend and a backend server. I will be a React application made with create-react-app. NodeJS and Express will be made to use the backend and it will communicate with a Postgres.
 
 ## Type of Application
 
