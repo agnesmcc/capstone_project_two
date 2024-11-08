@@ -20,7 +20,8 @@ CREATE TABLE listings (
   current_bid NUMERIC,
   category VARCHAR(25) REFERENCES categories (title) ON DELETE SET NULL,
   winner VARCHAR(25),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  end_datetime TIMESTAMP NOT NULL
 );
 
 CREATE TABLE watched_listings (

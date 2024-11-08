@@ -10,6 +10,7 @@ Table : Listings
     Column : category - text, required, foreign key to Categories.title
     Column : winner - text
     Column : created_at, datetime, required
+    Column : end_datetime, datetime, required
 
 Table : Users
 
