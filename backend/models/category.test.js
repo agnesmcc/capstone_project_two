@@ -13,7 +13,7 @@ afterAll(async () => {
     await db.end();
 });
 
-describe("getCategories", () => {
+describe("Category", () => {
     test("works: no categories", async () => {
         const result = await Category.getCategories();
         expect(result).toEqual([]);
