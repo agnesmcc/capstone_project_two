@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const { NotFoundError } = require("./expressError");
 
 const usersRoutes = require("./routes/users");
+const categoriesRoutes = require("./routes/categories");
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(morgan("tiny"));
 
 app.use("/users", usersRoutes);
+app.use("/categories", categoriesRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
