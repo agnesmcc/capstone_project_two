@@ -54,12 +54,12 @@ class Listing {
         return result.rows[0];
     }
 
-    static async getListingByCreatedBy(created_by) {
+    static async getListingsByCreatedBy(created_by) {
         const result = await db.query(
             `SELECT * FROM listings WHERE created_by = $1`,
             [created_by]
         )
-        return result.rows[0];
+        return result.rows;
     }
 }
 

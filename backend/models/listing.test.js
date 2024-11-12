@@ -71,16 +71,14 @@ describe("Listing", () => {
             image: "couch.jpg",
             starting_bid: "500.00",
             category: "furniture",
-            end_datetime: new Date('2022-01-01T05:00:00.000Z')
+            end_datetime: new Date('2022-01-01T00:00:00.000Z')
         });
     });
 
     test("can get a listing by created_by", async () => {
         await Category.addCategory("furniture");
         const listing = await Listing.addListing(testListing);
-        console.log(listing);
-        const result = await Listing.getListingByCreatedBy(listing.created_by);
-        console.log(result);
-        expect(result).toMatchObject(testListing);
+        const result = await Listing.getListingsByCreatedBy(listing.created_by);
+        expect(result).toMatchObject([testListing]);
     });
 });
