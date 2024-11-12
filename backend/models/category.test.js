@@ -27,6 +27,12 @@ describe("Category", () => {
         }]);
     })
 
+    test("fails: category not found", async () => {
+        expect(async () => {
+            await Category.deleteCategory("test");        
+        }).rejects.toThrow(NotFoundError);
+    });
+
     test("can add a category", async () => {
         const result = await Category.addCategory("test");
         expect(result.title).toEqual("test");

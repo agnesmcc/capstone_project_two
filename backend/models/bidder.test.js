@@ -59,14 +59,14 @@ describe('Bidder', () => {
     test("addBidder", async () => {
         const listing = await Listing.addListing(testListing);
         const result = await Bidder.addBid("testUser", listing.id, "100.00");
-        expect(result).toEqual({"bidder": "testUser", "listing_id": listing.id, "bid": "100.00"});
+        expect(result).toEqual({id: result.id, "bidder": "testUser", "listing_id": listing.id, "bid": "100.00"});
     })
 
     test("removeBidder", async () => {
         const listing = await Listing.addListing(testListing);
-        await Bidder.addBid("testUser", listing.id, "100.00");
-        const result = await Bidder.removeBid("testUser", listing.id);
-        expect(result).toEqual({"bidder": "testUser", "listing_id": listing.id});
+        const bid = await Bidder.addBid("testUser", listing.id, "100.00");
+        const result = await Bidder.removeBid(bid.id);
+        expect(result).toEqual({id: bid.id, "bidder": "testUser", "listing_id": listing.id});
         const allBidders = await Bidder.getBidsByListingId(listing.id);
         expect(allBidders).toEqual([]);
     }) 

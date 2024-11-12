@@ -52,6 +52,12 @@ describe("Listing", () => {
         expect(result).toEqual([]);
     });
 
+    test("fails to delete a listing that doesn't exist", async () => {
+        expect(async () => {
+            await Listing.deleteListing(0);
+        }).rejects.toThrow(NotFoundError);
+    });
+
     test("can update a listing", async () => {
         await Category.addCategory("furniture");
         const listing = await Listing.addListing(testListing);
@@ -73,6 +79,20 @@ describe("Listing", () => {
             category: "furniture",
             end_datetime: new Date('2022-01-01T00:00:00.000Z')
         });
+    });
+
+    test("fails to update a listing that doesn't exist", async () => {
+        expect(async () => {
+            await Listing.updateListing(0, {
+                created_by: "testUser",
+                title: "My Updated Test Listing",
+                description: "a nice couch",
+                image: "couch.jpg",
+                starting_bid: "500.00",
+                category: "furniture",
+                end_datetime: "2022-01-01 00:00:00"
+            });
+        }).rejects.toThrow(NotFoundError);
     });
 
     test("can get a listing by created_by", async () => {

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node server.js",
-    "test": "jest --coverage"
+    "test": "jest --runInBand --coverage"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
