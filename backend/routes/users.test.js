@@ -29,52 +29,6 @@ describe('User', () => {
         });
     });
 
-    describe("POST /users/register", () => {
-        test("works", async () => {
-            const res = await request(app).post("/users/register").send({
-                username: "testUser",
-                firstName: "Test",
-                lastName: "User",
-                password: "testUser",
-                email: "a@b.com"
-            });
-            expect(res.statusCode).toEqual(201);
-            expect(res.body).toEqual({
-                user: {
-                    username: "testUser",
-                    firstName: "Test",
-                    lastName: "User",
-                    email: "a@b.com"
-                }
-            });
-        });
-    });
-
-    describe("POST /users/login", () => {
-        test("works", async () => {
-            await User.register({
-                username: "testUser",
-                firstName: "Test",
-                lastName: "User",
-                password: "testUser",
-                email: "a@b.com"
-            });
-            const res = await request(app).post("/users/login").send({
-                username: "testUser",
-                password: "testUser"
-            });
-            expect(res.statusCode).toEqual(200);
-            expect(res.body).toEqual({
-                user: {
-                    username: "testUser",
-                    firstName: "Test",
-                    lastName: "User",
-                    email: "a@b.com"
-                }
-            });
-        });
-    });
-
     describe("DELETE /users/:username", () => {
         test("works", async () => {
             await User.register({

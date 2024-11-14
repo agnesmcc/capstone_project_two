@@ -10,6 +10,7 @@ const categoriesRoutes = require("./routes/categories");
 const listingsRoutes = require("./routes/listings");
 const watchedListingsRoutes = require("./routes/watchedListings");
 const bidderRoutes = require("./routes/bidders");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/categories", categoriesRoutes);
 app.use("/listings", listingsRoutes);
 app.use("/watched-listings", watchedListingsRoutes);
 app.use("/bidders", bidderRoutes);
+app.use("/auth", authRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {

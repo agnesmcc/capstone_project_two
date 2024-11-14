@@ -15,20 +15,10 @@ router.get("/", async function (req, res, next) {
     }
 });
 
-router.post("/register", async function (req, res, next) {
+router.post("/", async function (req, res, next) {
     try {
         const user = await User.register(req.body);
         return res.status(201).json({ user });
-    } catch (err) {
-        return next(err);
-    }
-});
-
-router.post("/login", async function (req, res, next) {
-    try {
-        const { username, password } = req.body;
-        const user = await User.authenticate(username, password);
-        return res.json({ user });
     } catch (err) {
         return next(err);
     }
