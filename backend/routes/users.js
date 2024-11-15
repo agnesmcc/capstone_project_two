@@ -3,10 +3,11 @@
 const express = require("express");
 const { BadRequestError } = require("../expressError");
 const User = require("../models/user");
+const { ensureAdmin, ensureCorrectUserOrAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/", async function (req, res, next) {
+router.get("/", ensureAdmin, async function (req, res, next) {
     try {
         const users = await User.getAllUsers();
         return res.json({ users });
@@ -15,7 +16,7 @@ router.get("/", async function (req, res, next) {
     }
 });
 
-router.post("/", async function (req, res, next) {
+router.post("/", ensureAdmin, async function (req, res, next) {
     try {
         const user = await User.register(req.body);
         return res.status(201).json({ user });
@@ -24,7 +25,7 @@ router.post("/", async function (req, res, next) {
     }
 });
 
-router.delete("/:username", async function (req, res, next) {
+router.delete("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
         await User.delete(req.params.username);
         return res.json({ deleted: req.params.username });
@@ -33,7 +34,7 @@ router.delete("/:username", async function (req, res, next) {
     }
 });
 
-router.get("/:username", async function (req, res, next) {
+router.get("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
         const user = await User.getUser(req.params.username);
         return res.json({ user });

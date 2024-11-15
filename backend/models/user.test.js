@@ -1,7 +1,7 @@
 "use strict";
 
 const db = require("../db.js");
-const { BadRequestError, NotFoundError } = require("../expressError.js");
+const { BadRequestError, NotFoundError, UnauthorizedError } = require("../expressError.js");
 const User = require("./user.js");
 
 beforeEach(async () => {
@@ -61,13 +61,13 @@ describe("User", () => {
         });
         expect(async () => {
             await User.authenticate("testUser", "wrongPassword");
-        }).rejects.toThrow(BadRequestError);
+        }).rejects.toThrow(UnauthorizedError);
     });
 
     test("fails to authenticate a user that doesn't exist", async () => {
         expect(async () => {
             await User.authenticate("testUser", "p@ssword");
-        }).rejects.toThrow(NotFoundError);
+        }).rejects.toThrow(UnauthorizedError);
     });
 
     test("can delete a user", async () => {

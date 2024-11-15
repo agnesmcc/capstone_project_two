@@ -2,7 +2,7 @@
 
 const db = require("../db");
 const bcrypt = require("bcrypt");
-const { BadRequestError, NotFoundError } = require("../expressError");
+const { BadRequestError, NotFoundError, UnauthorizedError } = require("../expressError");
 
 class User {
     static async getAllUsers() {
@@ -38,6 +38,10 @@ class User {
       }
 
     static async register({ username, firstName, lastName, password, email }) {
+      if (!username || !firstName || !lastName || !password || !email) {
+        throw new BadRequestError("Required fields missing");
+      }
+
       const duplicateCheck = await db.query(
             `SELECT username
              FROM users
@@ -94,6 +98,9 @@ class User {
              WHERE username = $1`,
             [username]
         );
+        if (result.rows.length === 0) {
+          throw new NotFoundError(`No user: ${username}`);
+        }
         return result.rows[0];
     }
 }
