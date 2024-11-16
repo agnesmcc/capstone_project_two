@@ -16,7 +16,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
     }
 });
 
-router.get("/", ensureLoggedIn, async function (req, res, next) {
+router.get("/", async function (req, res, next) {
     try {
         const categories = await Category.getCategories();
         return res.json({ categories });

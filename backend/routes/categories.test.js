@@ -38,10 +38,9 @@ describe('Category', () => {
 
     describe("GET /categories", () => {
         test("works", async () => {
-            await Category.addCategory("test");
             const res = await request(app).get("/categories");
             console.log(res.body);
-            expect(res.body).toEqual({ categories: [ { title: 'test' } ] });
+            expect(res.body).toEqual({ categories: [ { title: 'furniture' } ] });
         });
     });
 

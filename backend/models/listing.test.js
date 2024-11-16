@@ -47,7 +47,7 @@ describe("Listing", () => {
     test("can delete a listing", async () => {
         await Category.addCategory("furniture");
         const listing = await Listing.addListing(testListing);
-        await Listing.deleteListing(listing.id);
+        await Listing.deleteListing("testUser", listing.id);
         const result = await Listing.getAllListings();
         expect(result).toEqual([]);
     });
@@ -61,7 +61,7 @@ describe("Listing", () => {
     test("can update a listing", async () => {
         await Category.addCategory("furniture");
         const listing = await Listing.addListing(testListing);
-        const result = await Listing.updateListing(listing.id, {
+        const result = await Listing.updateListing("testUser", listing.id, {
             created_by: "testUser",
             title: "My Updated Test Listing",
             description: "a nice couch",
@@ -83,7 +83,7 @@ describe("Listing", () => {
 
     test("fails to update a listing that doesn't exist", async () => {
         expect(async () => {
-            await Listing.updateListing(0, {
+            await Listing.updateListing("testUser", 0, {
                 created_by: "testUser",
                 title: "My Updated Test Listing",
                 description: "a nice couch",
