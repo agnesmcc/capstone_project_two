@@ -3,7 +3,7 @@
 const express = require("express");
 const { BadRequestError } = require("../expressError");
 const Listing = require("../models/listing");
-const { ensureLoggedIn, ensureAdmin, ensureCorrectUserOrAdmin } = require("../middleware/auth");
+const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
