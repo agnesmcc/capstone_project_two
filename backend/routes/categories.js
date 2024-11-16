@@ -3,7 +3,7 @@
 const express = require("express");
 const { BadRequestError } = require("../expressError");
 const Category = require("../models/category");
-const { ensureAdmin } = require("../middleware/auth");
+const { ensureLoggedIn, ensureAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
     }
 });
 
-router.get("/", async function (req, res, next) {
+router.get("/", ensureLoggedIn, async function (req, res, next) {
     try {
         const categories = await Category.getCategories();
         return res.json({ categories });

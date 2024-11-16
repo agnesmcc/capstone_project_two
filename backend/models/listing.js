@@ -30,23 +30,23 @@ class Listing {
         return result.rows[0];
     }
 
-    static async deleteListing(id) {
+    static async deleteListing(username, id) {
         const result = await db.query(
-            `DELETE FROM listings WHERE id = $1 RETURNING id`,
-            [id]
+            `DELETE FROM listings WHERE created_by = $1 AND id = $2 RETURNING id`,
+            [username, id]
         );
         if (result.rows.length === 0) {
             throw new NotFoundError(`No listing: ${id}`);
         }
     }
     
-    static async updateListing(id, listing) {
+    static async updateListing(username, id, listing) {
         const result = await db.query(
             `UPDATE listings
-             SET created_by = $2, title = $3, description = $4, image = $5, starting_bid = $6, category = $7, end_datetime = $8
-             WHERE id = $1
+             SET created_by = $3, title = $4, description = $5, image = $6, starting_bid = $7, category = $8, end_datetime = $9
+             WHERE created_by = $1 AND id = $2
              RETURNING id, created_by, title, description, image, starting_bid, category, end_datetime`,
-            [id, listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category, listing.end_datetime]
+            [username, id, listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category, listing.end_datetime]
         );
         if (result.rows.length === 0) {
             throw new NotFoundError(`No listing: ${id}`);

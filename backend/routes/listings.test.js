@@ -8,82 +8,123 @@ const Listing = require("../models/listing");
 const User = require("../models/user");
 const Category = require("../models/category");
 
-const testListing = {
-    created_by: "testUser",
-    title: "My Test Listing",
-    description: "a nice couch",
-    image: "couch.jpg",
-    starting_bid: "500.00",
-    category: "furniture",
-    end_datetime: "2022-01-01T00:00:00.000Z"
-}
+const {
+    commonBeforeAll,
+    commonBeforeEach,
+    commonAfterEach,
+    commonAfterAll,
+    u1Token,
+    u2Token,
+    adminToken,
+    testListing,
+    testListingId
+} = require("./_testCommon");
+
+beforeAll(commonBeforeAll);
+beforeEach(commonBeforeEach);
+afterEach(commonAfterEach);
+afterAll(commonAfterAll);
 
 describe('Listing', () => {
-    beforeEach(async () => {
-        await db.query("DELETE FROM listings");
-        try {
-            await Category.addCategory("furniture");
-        } catch (err) {
-            console.log(err);
-        }
-        try {
-            await User.register({
-                username: "testUser",
-                firstName: "Test",
-                lastName: "User",
-                password: "testUser",
-                email: "a@b.com"
-            });
-        } catch (err) {
-            console.log(err);
-        }
-    });
-
-    afterAll(async () => {
-        await db.end();
-    });
-
     describe("POST /listings", () => {
-        test("works", async () => {
-            const res = await request(app).post("/listings").send(testListing);
-            console.log(res.body);
+        test("works with admin token", async () => {
+            const res = await request(app).post("/listings")
+                .send(testListing)
+                .set({ Authorization: `Bearer ${adminToken}` });
             expect(res.body).toMatchObject({ listing: testListing });
+        });
+
+        test("works with user token", async () => {
+            const res = await request(app).post("/listings")
+                .send(testListing)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toMatchObject({ listing: testListing });
+        });
+
+        test("unauth with no token", async () => {
+            const res = await request(app).post("/listings").send(testListing);
+            expect(res.statusCode).toEqual(401);
         });
     });
 
     describe("GET /listings", () => {
-        test("works", async () => {
-            await Listing.addListing(testListing);
-            const res = await request(app).get("/listings");
+        test("works with admin token", async () => {
+            const res = await request(app)
+                .get("/listings")
+                .set({ Authorization: `Bearer ${adminToken}` });
+            expect(res.body).toMatchObject({ listings: [testListing] });
+        });
+
+        test("works with user token", async () => {
+            const res = await request(app)
+                .get("/listings")
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toMatchObject({ listings: [testListing] });
+        });
+
+        test("works when not logged in", async () => {
+            const res = await request(app)
+                .get("/listings");
             expect(res.body).toMatchObject({ listings: [testListing] });
         });
     });
 
     describe("DELETE /listings", () => {
-        test("works", async () => {
-            const listing = await Listing.addListing(testListing);
-            const res = await request(app).delete("/listings").send({ id: listing.id });
-            expect(res.body).toEqual({ deleted: listing.id });
+        test("works with admin token", async () => {
+            const newListing = await request(app).post("/listings")
+                .send(testListing)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            const newListingId = newListing.body.listing.id;
+            const res = await request(app).delete("/listings/u1")
+                .send({ id: newListingId })
+                .set({ Authorization: `Bearer ${adminToken}` });
+            expect(res.body).toEqual({ deleted: newListingId });
             const result = await Listing.getAllListings();
-            expect(result).toEqual([]);
+            expect(result.length).toEqual(1); // one created by commonBeforeAll
+        });
+
+        test("works with matching user token", async () => {
+            const newListing = await request(app).post("/listings")
+                .send(testListing)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            const newListingId = newListing.body.listing.id;
+            const res = await request(app).delete("/listings/u1")
+                .send({ id: newListingId })
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toEqual({ deleted: newListingId });
+            const result = await Listing.getAllListings();
+            expect(result.length).toEqual(1); // one created by commonBeforeAll
+        });
+
+        test("unauth with no token", async () => {
+            const newListing = await request(app).post("/listings")
+                .send(testListing)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            const newListingId = newListing.body.listing.id;
+            const res = await request(app).delete("/listings/u1")
+                .send({ id: newListingId });
+            expect(res.statusCode).toEqual(401);
         });
     });
 
     describe("PUT /listings", () => {
-        test("works", async () => {
-            const listing = await Listing.addListing(testListing);
-            const res = await request(app).put("/listings").send({
-                id: listing.id,
-                created_by: "testUser",
+        test("works with admin token", async () => {
+            const newListing = await request(app).post("/listings")
+                .send(testListing)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            const newListingId = newListing.body.listing.id;
+            const res = await request(app).put("/listings/u1").send({
+                id: newListingId,
+                created_by: "u1",
                 title: "My updated Test Listing",
                 description: "a nice couch",
                 image: "couch.jpg",
                 starting_bid: "500.00",
                 category: "furniture",
                 end_datetime: "2022-01-01T00:00:00.000Z"
-            });
+            }).set({ Authorization: `Bearer ${adminToken}` });
             expect(res.body).toMatchObject({ listing: {
-                created_by: "testUser",
+                created_by: "u1",
                 title: "My updated Test Listing",
                 description: "a nice couch",
                 image: "couch.jpg",
@@ -92,12 +133,63 @@ describe('Listing', () => {
                 end_datetime: "2022-01-01T00:00:00.000Z"
             } });
         });
+
+        test("works with matching user token", async () => {
+            const newListing = await request(app).post("/listings")
+                .send(testListing)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            const newListingId = newListing.body.listing.id;
+            const res = await request(app).put("/listings/u1").send({
+                id: newListingId,
+                created_by: "u1",
+                title: "My updated Test Listing",
+                description: "a nice couch",
+                image: "couch.jpg",
+                starting_bid: "500.00",
+                category: "furniture",
+                end_datetime: "2022-01-01T00:00:00.000Z"
+            }).set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toMatchObject({ listing: {
+                created_by: "u1",
+                title: "My updated Test Listing",
+                description: "a nice couch",
+                image: "couch.jpg",
+                starting_bid: "500.00",
+                category: "furniture",
+                end_datetime: "2022-01-01T00:00:00.000Z"
+            } });
+        })
+
+        test("unauth with no token", async () => {
+            const newListing = await request(app).post("/listings")
+                .send(testListing)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            const newListingId = newListing.body.listing.id;
+            const res = await request(app).put("/listings/u1").send({
+                id: newListingId,
+                created_by: "u1",
+                title: "My updated Test Listing",
+                description: "a nice couch",
+                image: "couch.jpg",
+                starting_bid: "500.00",
+                category: "furniture",
+                end_datetime: "2022-01-01T00:00:00.000Z"
+            });
+            expect(res.statusCode).toEqual(401);
+        });
     });
 
-    describe("GET /listings/created_by", () => {
-        test("works", async () => {
-            const listing = await Listing.addListing(testListing);
-            const res = await request(app).get(`/listings/created_by/${listing.created_by}`);
+    describe("GET /listings/created_by/:username", () => {
+        test("works when logged in", async () => {
+            const res = await request(app)
+                .get(`/listings/created_by/u1`)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toMatchObject({ listings: [testListing] });
+        });
+
+        test("works when not logged in", async () => {
+            const res = await request(app)
+                .get(`/listings/created_by/u1`);
             expect(res.body).toMatchObject({ listings: [testListing] });
         });
     });

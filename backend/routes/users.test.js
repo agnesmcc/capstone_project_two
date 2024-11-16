@@ -14,12 +14,12 @@ const {
     u1Token,
     u2Token,
     adminToken,
-  } = require("./_testCommon");
-  
-  beforeAll(commonBeforeAll);
-  beforeEach(commonBeforeEach);
-  afterEach(commonAfterEach);
-  afterAll(commonAfterAll);
+} = require("./_testCommon");
+
+beforeAll(commonBeforeAll);
+beforeEach(commonBeforeEach);
+afterEach(commonAfterEach);
+afterAll(commonAfterAll);
 
 describe('User', () => {
     // GET /users
