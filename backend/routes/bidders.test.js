@@ -9,83 +9,136 @@ const User = require("../models/user");
 const Category = require("../models/category");
 const Bidder = require("../models/bidder");
 
-const testListing = {
-    created_by: "testUser",
-    title: "My Test Listing",
-    description: "a nice couch",
-    image: "couch.jpg",
-    starting_bid: "500.00",
-    category: "furniture",
-    end_datetime: "2022-01-01T00:00:00.000Z"
-}
+const {
+    commonBeforeAll,
+    commonBeforeEach,
+    commonAfterEach,
+    commonAfterAll,
+    u1Token,
+    adminToken,
+    testListing
+} = require("./_testCommon");
 
-let testUser
-let listing
+let listingId;
 
-describe('WatchedListings', () => {
-    beforeEach(async () => {
-        await db.query("DELETE FROM bidders");
-        try {
-            await Category.addCategory("furniture");
-        } catch (err) {
-            console.log(err);
-        }
-        try {
-            testUser = await User.register({
-                username: "testUser",
-                firstName: "Test",
-                lastName: "User",
-                password: "testUser",
-                email: "a@b.com"
-            });
-        } catch (err) {
-            testUser = await User.getUser("testUser");
-            console.log(testUser);
-            console.log(err);
-        }
-        listing = await Listing.addListing(testListing);
-        console.log(listing);
-    });
+beforeAll(async () => {
+    await commonBeforeAll();
+    const listings = await Listing.getListingsByCreatedBy("u1");
+    listingId = listings[0].id;
+});
+beforeEach(commonBeforeEach);
+afterEach(commonAfterEach);
+afterAll(commonAfterAll);
 
-    afterAll(async () => {
-        await db.end();
-    });
+describe('Bidders', () => {
+    describe('POST /bidders/by-username/:username', () => {
+        test('addBid using admin token', async () => {
+            const res = await request(app)
+                .post("/bidders/by-username/u1")
+                .send({ listing_id: listingId, bid: "500.00" })
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.statusCode).toEqual(201);
+            expect(res.body).toEqual({ bid: { id: res.body.bid.id, bidder: "u1", listing_id: listingId, bid: "500.00" } });
+        });
 
-    test('addBid', async () => {
-        const res = await request(app)
-            .post("/bidders")
-            .send({
-                username: "testUser",
-                listing_id: listing.id,
-                bid: "500.00"
-            });
-        expect(res.statusCode).toEqual(201);
-        expect(res.body).toEqual({ bid: { id: res.body.bid.id, bidder: "testUser", listing_id: listing.id, bid: "500.00" } });
-    });
+        test('addBid using user token', async () => {
+            const res = await request(app)
+                .post("/bidders/by-username/u1")
+                .send({ listing_id: listingId, bid: "500.00" })
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.statusCode).toEqual(201);
+            expect(res.body).toEqual({ bid: { id: res.body.bid.id, bidder: "u1", listing_id: listingId, bid: "500.00" } });
+        });
 
-    test('getBidsByBidder', async () => {
-        const res = await request(app)
-            .get("/bidders/by-username/testUser")
-            .send();
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toEqual({ bidders: [] });
-    });
+        test("unauth with no token", async () => {
+            const res = await request(app)
+                .post("/bidders/by-username/u1")
+                .send({ listing_id: listingId, bid: "500.00" });
+            expect(res.statusCode).toEqual(401);
+        });
+    })
+    
+    describe('GET /bidders/by-username/:username', () => {
+        test('getBidsByBidder with admin token', async () => {
+            const res = await request(app)
+                .get("/bidders/by-username/u1")
+                .send()
+                .set({ Authorization: `Bearer ${adminToken}` });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual({ bidders: [] });
+        });
 
-    test('getBidsByListingId', async () => {
-        const res = await request(app)
-            .get(`/bidders/by-listing-id/${listing.id}`)
-            .send();
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toEqual({ bidders: [] });
-    });
+        test('getBidsByBidder with user token', async () => {
+            const res = await request(app)
+                .get("/bidders/by-username/u1")
+                .send()
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual({ bidders: [] });
+        })
 
-    test('removeBidder', async () => {
-        const bid = await Bidder.addBid("testUser", listing.id, "500.00");
-        console.log(bid);
-        const res = await request(app)
-            .delete(`/bidders/${bid.id}`)
-        expect(res.statusCode).toEqual(200);
-        expect(res.body).toEqual({ deleted_bid: { 
-            id: bid.id, listing_id: listing.id, bidder: testUser.username } });
-    });
+        test("unauth with no token", async () => {
+            const res = await request(app)
+                .get("/bidders/by-username/u1");
+            expect(res.statusCode).toEqual(401);
+        });
+    })
+    
+    describe('GET /bidders/by-listing-id/:listing_id', () => {
+        test('getBidsByListingId with admin token', async () => {
+            const res = await request(app)
+                .get(`/bidders/by-listing-id/${listingId}`)
+                .send()
+                .set({ Authorization: `Bearer ${adminToken}` });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual({ bidders: [] });
+        });
+
+        test('getBidsByListingId with user token', async () => {
+            const res = await request(app)
+                .get(`/bidders/by-listing-id/${listingId}`)
+                .send()
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual({ bidders: [] });
+        });
+
+        test("unauth with no token", async () => {
+            const res = await request(app)
+                .get(`/bidders/by-listing-id/${listingId}`);
+            expect(res.statusCode).toEqual(401);
+        });
+    })
+    
+    describe('DELETE /bidders/:id', () => {
+        test('removeBidder with admin token', async () => {
+            const bid = await Bidder.addBid("u1", listingId, "500.00");
+            const res = await request(app)
+                .delete(`/bidders/u1/${bid.id}`)
+                .send()
+                .set({ Authorization: `Bearer ${adminToken}` });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual({ deleted_bid: { 
+                id: bid.id, listing_id: listingId, bidder: "u1" } });
+        });
+
+        test('removeBidder with user token', async () => {
+            const bid = await Bidder.addBid("u1", listingId, "500.00");
+            const res = await request(app)
+                .delete(`/bidders/u1/${bid.id}`)
+                .send()
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual({ deleted_bid: { 
+                id: bid.id, listing_id: listingId, bidder: "u1" } });
+        });
+
+        test("unauth with no token", async () => {
+            const bid = await Bidder.addBid("u1", listingId, "500.00");
+            const res = await request(app)
+                .delete(`/bidders/u1/${bid.id}`);
+            expect(res.statusCode).toEqual(401);
+        });
+    })
+    
 });

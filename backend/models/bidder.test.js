@@ -65,7 +65,7 @@ describe('Bidder', () => {
     test("removeBidder", async () => {
         const listing = await Listing.addListing(testListing);
         const bid = await Bidder.addBid("testUser", listing.id, "100.00");
-        const result = await Bidder.removeBid(bid.id);
+        const result = await Bidder.removeBid("testUser", bid.id);
         expect(result).toEqual({id: bid.id, "bidder": "testUser", "listing_id": listing.id});
         const allBidders = await Bidder.getBidsByListingId(listing.id);
         expect(allBidders).toEqual([]);

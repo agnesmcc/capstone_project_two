@@ -33,10 +33,11 @@ class Bidder {
         return result.rows[0];
     }
 
-    static async removeBid(id) {
+    static async removeBid(username, id) {
         const result = await db.query(
-            `DELETE FROM bidders WHERE id = $1 RETURNING id, bidder, listing_id`,
-            [id]
+            `DELETE FROM bidders WHERE bidder = $1 AND id = $2 
+            RETURNING id, bidder, listing_id`,
+            [username, id]
         );
         return result.rows[0];
     }

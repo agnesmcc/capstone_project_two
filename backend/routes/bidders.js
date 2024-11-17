@@ -1,21 +1,21 @@
 "use strict";
 
 const express = require("express");
-const { BadRequestError } = require("../expressError");
 const Bidder = require("../models/bidder");
+const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.post("/", async function (req, res, next) {
+router.post("/by-username/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
-        const bid = await Bidder.addBid(req.body.username, req.body.listing_id, req.body.bid);
+        const bid = await Bidder.addBid(req.params.username, req.body.listing_id, req.body.bid);
         return res.status(201).json({ bid });
     } catch (err) {
         return next(err);
     }
 });
 
-router.get("/by-username/:username", async function (req, res, next) {
+router.get("/by-username/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
         const bidders = await Bidder.getBidsByBidder(req.params.username);
         return res.json({ bidders });
@@ -24,7 +24,7 @@ router.get("/by-username/:username", async function (req, res, next) {
     }
 });
 
-router.get("/by-listing-id/:listing_id", async function (req, res, next) {
+router.get("/by-listing-id/:listing_id", ensureLoggedIn,async function (req, res, next) {
     try {
         const bidders = await Bidder.getBidsByListingId(req.params.listing_id);
         return res.json({ bidders });
@@ -33,9 +33,9 @@ router.get("/by-listing-id/:listing_id", async function (req, res, next) {
     }
 });
 
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:username/:id", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
-        const result = await Bidder.removeBid(req.params.id);
+        const result = await Bidder.removeBid(req.params.username, req.params.id);
         return res.json({ deleted_bid: result });
     } catch (err) {
         return next(err);

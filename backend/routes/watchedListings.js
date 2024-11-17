@@ -1,9 +1,8 @@
 "use strict";
 
 const express = require("express");
-const { BadRequestError } = require("../expressError");
 const WatchedListing = require("../models/watchedListing");
-const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require("../middleware/auth");
+const { ensureCorrectUserOrAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
