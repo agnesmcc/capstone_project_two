@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post("/", ensureLoggedIn, async function (req, res, next) {
     try {
+        req.body.created_by = res.locals.user.username;
         const listing = await Listing.addListing(req.body);
         return res.status(201).json({ listing });
     } catch (err) {
