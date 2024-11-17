@@ -24,20 +24,23 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
+async function postTestWatchedListing() {
+    const res = await request(app).post("/watched-listings/by-username/u1").send({
+        listing_id: listingId
+    }).set({ Authorization: `Bearer ${adminToken}` });
+    return res
+}
+
 describe('WatchedListings', () => {
     describe("POST /watched-listings/by-username/:username", () => {
         test("works with admin token", async () => {
-            const res = await request(app).post("/watched-listings/by-username/u1").send({
-                listing_id: listingId
-            }).set({ Authorization: `Bearer ${adminToken}` });
+            const res = await postTestWatchedListing();
             expect(res.body).toEqual({ watchedListing: { 
                 listing_id: listingId, username: "u1" } });
         });
 
         test("works with matching user token", async () => {
-            const res = await request(app).post("/watched-listings/by-username/u1").send({
-                listing_id: listingId
-            }).set({ Authorization: `Bearer ${u1Token}` });
+            const res = await postTestWatchedListing();
             expect(res.body).toEqual({ watchedListing: { 
                 listing_id: listingId, username: "u1" } });
         });
@@ -52,9 +55,7 @@ describe('WatchedListings', () => {
 
     describe("GET /watched-listings/by-username/:username", () => {
         test("works with admin token", async () => {
-            await request(app).post("/watched-listings/by-username/u1").send({
-                listing_id: listingId
-            }).set({ Authorization: `Bearer ${adminToken}` });
+            await postTestWatchedListing();
             const res = await request(app)
                 .get("/watched-listings/by-username/u1")
                 .set({ Authorization: `Bearer ${adminToken}` });
@@ -63,9 +64,7 @@ describe('WatchedListings', () => {
         });
 
         test("works with matching user token", async () => {
-            await request(app).post("/watched-listings/by-username/u1").send({
-                listing_id: listingId
-            }).set({ Authorization: `Bearer ${u1Token}` });
+            await postTestWatchedListing();
             const res = await request(app)
                 .get("/watched-listings/by-username/u1")
                 .set({ Authorization: `Bearer ${u1Token}` });
@@ -81,31 +80,26 @@ describe('WatchedListings', () => {
 
     describe("DELETE /watched-listings/by-username/:username", () => {
         test("works with admin token", async () => {
-            await request(app).post("/watched-listings/by-username/u1").send({
-                listing_id: listingId
-            }).set({ Authorization: `Bearer ${adminToken}` });
-            const res = await request(app).delete("/watched-listings/by-username/u1").send({
-                listing_id: listingId
-            }).set({ Authorization: `Bearer ${adminToken}` });
+            await postTestWatchedListing();
+            const res = await request(app).delete("/watched-listings/by-username/u1")
+                .send({ listing_id: listingId })
+                .set({ Authorization: `Bearer ${adminToken}` });
             expect(res.body).toEqual({ deleted: { 
                 "listing_id": listingId, "username": "u1" } });
         });
 
         test("works with matching user token", async () => {
-            await request(app).post("/watched-listings/by-username/u1").send({
-                listing_id: listingId
-            }).set({ Authorization: `Bearer ${u1Token}` });
-            const res = await request(app).delete("/watched-listings/by-username/u1").send({
-                listing_id: listingId
-            }).set({ Authorization: `Bearer ${u1Token}` });
+            await postTestWatchedListing();
+            const res = await request(app).delete("/watched-listings/by-username/u1")
+                .send({ listing_id: listingId })
+                .set({ Authorization: `Bearer ${u1Token}` });
             expect(res.body).toEqual({ deleted: { 
                 "listing_id": listingId, "username": "u1" } });
         });
 
         test("unauth with no token", async () => {
-            const res = await request(app).delete("/watched-listings/by-username/u1").send({
-                listing_id: listingId
-            });
+            const res = await request(app).delete("/watched-listings/by-username/u1")
+                .send({ listing_id: listingId });
             expect(res.statusCode).toEqual(401);
         });
     });
