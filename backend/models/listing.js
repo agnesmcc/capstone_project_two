@@ -16,7 +16,7 @@ class Listing {
                 created_by, title, description, image, starting_bid, category, end_datetime
              )
              VALUES ($1, $2, $3, $4, $5, $6, $7)
-             RETURNING id, created_by, title, description, image, starting_bid, category, end_datetime`,
+             RETURNING id, created_by, title, description, image, starting_bid, category, created_at, end_datetime`,
             [listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category, listing.end_datetime]
         );
         return result.rows[0];
