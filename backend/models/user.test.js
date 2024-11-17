@@ -40,14 +40,16 @@ describe("User", () => {
             firstName: "first",
             lastName: "last",
             password: "p@ssword",
-            email: "test@test"
+            email: "test@test",
+            isAdmin: false
         });
         const result = await User.authenticate("testUser", "p@ssword");
         expect(result).toEqual({
             username: "testUser",
             firstName: "first",
             lastName: "last",
-            email: "test@test"
+            email: "test@test",
+            isAdmin: false
         });
     });
 

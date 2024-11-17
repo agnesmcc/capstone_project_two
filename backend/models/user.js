@@ -17,7 +17,8 @@ class User {
                       first_name AS "firstName",
                       last_name AS "lastName",
                       password,
-                      email
+                      email,
+                      is_admin AS "isAdmin"
                FROM users
                WHERE username = $1`,
             [username],
