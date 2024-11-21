@@ -26,6 +26,7 @@ class Api {
         : {};
 
     try {
+      console.log({ url, method, data, params, headers });
       return (await axios({ url, method, data, params, headers })).data;
     } catch (err) {
       console.error("API Error:", err.response);
@@ -35,36 +36,23 @@ class Api {
   }
 
   /** Login a user. */
-
   static async login(data) {
     let res = await this.request(`auth/login`, data, "post");
     return res.token;
   }
 
   /** Register a user. */
-
   static async register(data) {
     let res = await this.request(`auth/register`, data, "post");
     return res.token;
   }
 
-  /** Delete user. */
-
-  static async deleteUser(username) {
-    await this.request(`users/${username}`, {}, "delete");
+  /** Create a new listing. */
+  static async createListing(data) {
+    let res = await this.request(`listings`, data, "post");
+    return res.listing;
   }
 
-  /** Get details on a user. */
-
-  static async getUser(username) {
-    let res = await this.request(`users/${username}`);
-    return res.user;
-  }
 }
-
-// for now, put token ("testuser" / "password" on class)
-// Api.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ" +
-//     "SI6InRlc3R1c2VyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU5ODE1OTI1OX0." +
-//     "FtrMwBQwe6Ue-glIFgz_Nf8XxRT2YecFCiSpYL0fCXc";
 
 export default Api;
