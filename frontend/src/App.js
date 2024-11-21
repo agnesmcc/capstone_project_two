@@ -1,7 +1,9 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useCallback, useContext } from "react";
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
+import { UserContext } from "./UserContext";
 import useLocalStorage from "./useLocalStorage";
+import { jwtDecode } from "jwt-decode";
 import Api from "./Api";
 import Home from './Home';
 import LoginPage from "./LoginPage";
@@ -11,9 +13,21 @@ import CreateListing from "./CreateListing";
 function App() {
   const [token, setToken] = useLocalStorage('token', null);
   
+  const { setUser } = useContext(UserContext);
+
+  const getUser = useCallback(() => {
+    let user = jwtDecode(token);
+    setUser(user);
+  }, [token, setUser]);
+
   useEffect(() => {
-    Api.token = token;
-  }, [token]);
+    if (token) {
+      Api.token = token;
+      getUser();
+    } else {
+      setUser(null);
+    }
+  }, [token, getUser, setUser]);
 
   return (
     <div className="App">

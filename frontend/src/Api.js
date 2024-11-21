@@ -53,6 +53,12 @@ class Api {
     return res.listing;
   }
 
+  /** Get user by username. */
+  static async getUser(username) {
+    let res = await this.request(`users/${username}`);
+    return res.user;
+  }
+
 }
 
 export default Api;
