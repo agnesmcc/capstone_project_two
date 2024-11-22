@@ -1,0 +1,28 @@
+.listing-detail-body {
+  display: flex;
+  align-items: top;
+}
+
+.listing-detail-img {
+  width: 250px;
+  height: 250px;
+  margin-bottom: 10px;
+}
+
+.listing-detail-data {
+  width: auto;
+  margin-left: 50px;
+  margin-right: 20px;
+  height: 200px;
+  text-align: left;
+  flex: 1;
+}
+
+.listing-detail-data > div {
+  margin-bottom: 10px;
+}
+
+.listing-detail-description {
+  margin-left: 50px;
+  text-align: left;
+}

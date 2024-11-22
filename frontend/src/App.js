@@ -1,14 +1,15 @@
-import { React, useEffect, useCallback, useContext } from "react";
-import { Routes, Route } from 'react-router-dom';
-import './App.css';
-import { UserContext } from "./UserContext";
-import useLocalStorage from "./useLocalStorage";
 import { jwtDecode } from "jwt-decode";
+import { React, useCallback, useContext, useEffect } from "react";
+import { Route, Routes } from 'react-router-dom';
 import Api from "./Api";
+import './App.css';
+import CreateListing from "./CreateListing";
 import Home from './Home';
+import ListingDetail from "./ListingDetail";
 import LoginPage from "./LoginPage";
 import SignupPage from "./SignupPage";
-import CreateListing from "./CreateListing";
+import { UserContext } from "./UserContext";
+import useLocalStorage from "./useLocalStorage";
 
 function App() {
   const [token, setToken] = useLocalStorage('token', null);
@@ -36,6 +37,7 @@ function App() {
           <Route path="/login" element={<LoginPage setToken={setToken}/>} />
           <Route path="/signup" element={<SignupPage setToken={setToken}/>} />
           <Route path="/create_listing" element={<CreateListing/>} />
+          <Route path="/listings/:id" element={<ListingDetail/>} />
           <Route path="*" element={<div>Page not found</div>} />
         </Routes>
     </div>
