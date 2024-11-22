@@ -53,4 +53,13 @@ router.get("/created_by/:username", async function (req, res, next) {
     }
 })
 
+router.get("/:listing_id", async function (req, res, next) {
+    try {
+        const listing = await Listing.getListing(req.params.listing_id);
+        return res.json({ listing });
+    } catch (err) {
+        return next(err);
+    }
+});
+
 module.exports = router;

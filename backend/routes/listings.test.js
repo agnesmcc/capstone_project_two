@@ -18,7 +18,13 @@ const {
     testListing
 } = require("./_testCommon");
 
-beforeAll(commonBeforeAll);
+let listingId;
+
+beforeAll(async () => {
+    await commonBeforeAll();
+    const listings = await Listing.getListingsByCreatedBy("u1");
+    listingId = listings[0].id;
+});
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
@@ -29,7 +35,9 @@ describe('Listing', () => {
             const res = await request(app).post("/listings")
                 .send(testListing)
                 .set({ Authorization: `Bearer ${adminToken}` });
-            expect(res.body).toMatchObject({ listing: testListing });
+            let adminListing = {...testListing};
+            adminListing.created_by = "admin";
+            expect(res.body).toMatchObject({ listing: adminListing });
         });
 
         test("works with user token", async () => {
@@ -189,6 +197,21 @@ describe('Listing', () => {
             const res = await request(app)
                 .get(`/listings/created_by/u1`);
             expect(res.body).toMatchObject({ listings: [testListing] });
+        });
+    });
+
+    describe("GET /listings/:id", () => {
+        test("works when logged in", async () => {
+            const res = await request(app)
+                .get(`/listings/${listingId}`)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toMatchObject({ listing: testListing });
+        });
+
+        test("works when not logged in", async () => {
+            const res = await request(app)
+                .get(`/listings/${listingId}`);
+            expect(res.body).toMatchObject({ listing: testListing });
         });
     });
 });
