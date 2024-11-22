@@ -1,0 +1,9 @@
+.listing-card {
+    /* border: 1px solid black; */
+    background-color: rgb(245, 245, 245);
+    padding: 10px;
+    margin: 10px;
+    width: 400px;
+    border-radius: 10px;
+    text-align: left;
+}

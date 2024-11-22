@@ -59,6 +59,12 @@ class Api {
     return res.user;
   }
 
+  /** Get all listings. */
+  static async getListings() {
+    let res = await this.request(`listings`);
+    return res;
+  }
+
 }
 
 export default Api;

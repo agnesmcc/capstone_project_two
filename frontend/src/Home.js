@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
+import Listings from "./Listings";
 
 const Home = ({setToken}) => {
     const { user } = useContext(UserContext);
@@ -8,7 +9,7 @@ const Home = ({setToken}) => {
 
     return (
         <div>
-            <h1>Home</h1>
+            <h1>eBid</h1>
             { !user ? <>
                 <div><Link to="/login">Login</Link></div>
                 <div><Link to="/signup">Signup</Link></div>
@@ -16,6 +17,7 @@ const Home = ({setToken}) => {
                 <div><Link to="/create_listing">Create Listing</Link></div>
                 <div><Link onClick={() => setToken(null)} to="/">Logout</Link></div>
             </>}
+            <Listings />
         </div>
     );
 };
