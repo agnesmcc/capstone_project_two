@@ -9,7 +9,6 @@ const Home = ({setToken}) => {
 
     return (
         <div>
-            <h1>eBid</h1>
             { !user ? <>
                 <div><Link to="/login">Login</Link></div>
                 <div><Link to="/signup">Signup</Link></div>

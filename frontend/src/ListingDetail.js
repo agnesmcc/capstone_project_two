@@ -5,6 +5,7 @@ import { useQuery } from "react-query";
 import "./ListingDetail.css";
 
 const fetchListing = async (id) => {
+    console.log('fetching listing details');
     let res = await Api.getListing(id);
     console.log(res);
     return res;
@@ -12,7 +13,8 @@ const fetchListing = async (id) => {
 
 const ListingDetail = () => {
     const { id } = useParams();
-    const { data, error, isLoading } = useQuery(['listing', id], () => fetchListing(id));
+    const { data, error, isLoading } = useQuery(
+        ['listing', id], () => fetchListing(id), {staleTime: 5000});
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;

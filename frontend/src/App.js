@@ -32,6 +32,7 @@ function App() {
 
   return (
     <div className="App">
+        <h1>eBid</h1>
         <Routes>
           <Route exact path="/" element={<Home setToken={setToken}/>} />
           <Route path="/login" element={<LoginPage setToken={setToken}/>} />
