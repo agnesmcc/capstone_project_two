@@ -26,7 +26,6 @@ class Api {
         : {};
 
     try {
-      console.log({ url, method, data, params, headers });
       return (await axios({ url, method, data, params, headers })).data;
     } catch (err) {
       console.error("API Error:", err.response);

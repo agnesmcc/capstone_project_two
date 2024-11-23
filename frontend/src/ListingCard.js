@@ -3,7 +3,6 @@ import "./ListingCard.css";
 import { useNavigate } from "react-router-dom";
 
 const ListingCard = ({ listing }) => {
-    console.log(listing);
     const navigate = useNavigate();
 
     const handleClick = () => {
