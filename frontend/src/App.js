@@ -3,15 +3,17 @@ import { React } from "react";
 import { useQuery } from "react-query";
 import { Route, Routes } from 'react-router-dom';
 import Api from "./Api";
-import './App.css';
 import CreateListing from "./CreateListing";
 import Home from './Home';
 import ListingDetail from "./ListingDetail";
 import LoginPage from "./LoginPage";
-import NavBar from "./NavBar";
+import NavigationBar from "./NavigationBar";
 import SignupPage from "./SignupPage";
 import useLocalStorage from "./useLocalStorage";
 import { UserProvider } from "./UserContext";
+import UserDashboard from "./UserDashboard";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   const [token, setToken] = useLocalStorage('token', null);
@@ -33,14 +35,15 @@ function App() {
 
   return (
     <UserProvider token={token} user={user}>
-    <div className="App">
-        <NavBar setToken={setToken}/>
+    <div>
+        <NavigationBar setToken={setToken}/>
         <Routes>
           <Route exact path="/" element={<Home setToken={setToken}/>} />
           <Route path="/login" element={<LoginPage setToken={setToken}/>} />
           <Route path="/signup" element={<SignupPage setToken={setToken}/>} />
           <Route path="/create_listing" element={<CreateListing/>} />
           <Route path="/listings/:id" element={<ListingDetail/>} />
+          <Route path="/user_dashboard" element={<UserDashboard/>} />
           <Route path="*" element={<div>Page not found</div>} />
         </Routes>
     </div>
