@@ -62,4 +62,13 @@ router.get("/:listing_id", async function (req, res, next) {
     }
 });
 
+router.get("/watched_by/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
+    try {
+        const listings = await Listing.getWatchedListingsByUsername(req.params.username);
+        return res.json({ listings });
+    } catch (err) {
+        return next(err);
+    }
+})
+
 module.exports = router;

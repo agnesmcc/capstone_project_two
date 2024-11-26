@@ -61,6 +61,17 @@ class Listing {
         )
         return result.rows;
     }
+
+    static async getWatchedListingsByUsername(username) {
+        const result = await db.query(
+            `SELECT l.*
+             FROM watched_listings wl
+             JOIN listings l ON wl.listing_id = l.id
+             WHERE wl.username = $1`,
+            [username]
+        )
+        return result.rows;
+    }
 }
 
 module.exports = Listing;

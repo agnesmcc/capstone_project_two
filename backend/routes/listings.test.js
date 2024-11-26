@@ -6,7 +6,7 @@ const db = require("../db.js");
 const app = require("../app");
 const Listing = require("../models/listing");
 const User = require("../models/user");
-const Category = require("../models/category");
+const WatchedListing = require("../models/watchedListing");
 
 const {
     commonBeforeAll,
@@ -14,6 +14,7 @@ const {
     commonAfterEach,
     commonAfterAll,
     u1Token,
+    u2Token,
     adminToken,
     testListing
 } = require("./_testCommon");
@@ -212,6 +213,29 @@ describe('Listing', () => {
             const res = await request(app)
                 .get(`/listings/${listingId}`);
             expect(res.body).toMatchObject({ listing: testListing });
+        });
+    });
+
+    describe("GET /listings/watched_by/:username", () => {
+        test("works when logged in as matching user", async () => {
+            await WatchedListing.addWatchedListing("u1", listingId);
+            const res = await request(app)
+                .get(`/listings/watched_by/u1`)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toMatchObject({ listings: [testListing] });
+        });
+
+        test("does not work when logged in as non-matching user", async () => {
+            const res = await request(app)
+                .get(`/listings/watched_by/u1`)
+                .set({ Authorization: `Bearer ${u2Token}` });
+            expect(res.statusCode).toEqual(401);
+        });
+
+        test("does not work when not logged in", async () => {
+            const res = await request(app)
+                .get(`/listings/watched_by/u1`);
+            expect(res.statusCode).toEqual(401);
         });
     });
 });

@@ -2,8 +2,10 @@
 
 const db = require("../db.js");
 const { BadRequestError, NotFoundError } = require("../expressError.js");
+const User = require("./user.js");
 const Listing = require("./listing.js");
 const Category = require("./category.js");
+const WatchedListing = require("./watchedListing.js");
 
 const testListing = {
     created_by: "testUser",
@@ -16,7 +18,9 @@ const testListing = {
 };
 
 beforeEach(async () => {
+    await db.query("DELETE FROM watched_listings");
     await db.query("DELETE FROM listings");
+    await db.query("DELETE FROM users");
     await db.query("DELETE FROM categories");
 });
 
@@ -99,6 +103,21 @@ describe("Listing", () => {
         await Category.addCategory("furniture");
         const listing = await Listing.addListing(testListing);
         const result = await Listing.getListingsByCreatedBy(listing.created_by);
+        expect(result).toMatchObject([testListing]);
+    });
+
+    test("can get watched listings by username", async () => {
+        await User.register({
+            username: "testUser",
+            firstName: "Test",
+            lastName: "User",
+            password: "testUser",
+            email: "test@test"
+        })
+        await Category.addCategory("furniture");
+        const listing = await Listing.addListing(testListing);
+        await WatchedListing.addWatchedListing("testUser", listing.id);
+        const result = await Listing.getWatchedListingsByUsername("testUser");
         expect(result).toMatchObject([testListing]);
     });
 });
