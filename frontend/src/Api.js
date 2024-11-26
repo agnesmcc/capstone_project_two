@@ -69,6 +69,19 @@ class Api {
     let res = await this.request(`listings/${id}`);
     return res.listing;
   }
+
+  /** Watch a listing. */
+  static async watchListing(username, listing_id) {
+    const data = { listing_id };
+    let res = await this.request(`watched-listings/by-username/${username}`, data, "post");
+    return res.listing;
+  }
+
+  /** Get listings watched by username. */
+  static async getWatchedListings(username) {
+    let res = await this.request(`listings/watched_by/${username}`);
+    return res.listings;
+  }
 }
 
 export default Api;
