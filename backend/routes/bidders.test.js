@@ -34,8 +34,8 @@ describe('Bidders', () => {
     describe('POST /bidders/by-username/:username', () => {
         test('addBid using admin token', async () => {
             const res = await request(app)
-                .post("/bidders/by-username/u1")
-                .send({ listing_id: listingId, bid: "500.00" })
+                .post(`/bidders/u1/${listingId}`)
+                .send({ bid: "500.00" })
                 .set({ Authorization: `Bearer ${u1Token}` });
             expect(res.statusCode).toEqual(201);
             expect(res.body).toEqual({ bid: { id: res.body.bid.id, bidder: "u1", listing_id: listingId, bid: "500.00" } });
@@ -43,8 +43,8 @@ describe('Bidders', () => {
 
         test('addBid using user token', async () => {
             const res = await request(app)
-                .post("/bidders/by-username/u1")
-                .send({ listing_id: listingId, bid: "500.00" })
+                .post(`/bidders/u1/${listingId}`)
+                .send({ bid: "500.00" })
                 .set({ Authorization: `Bearer ${u1Token}` });
             expect(res.statusCode).toEqual(201);
             expect(res.body).toEqual({ bid: { id: res.body.bid.id, bidder: "u1", listing_id: listingId, bid: "500.00" } });
@@ -52,8 +52,8 @@ describe('Bidders', () => {
 
         test("unauth with no token", async () => {
             const res = await request(app)
-                .post("/bidders/by-username/u1")
-                .send({ listing_id: listingId, bid: "500.00" });
+                .post(`/bidders/u1/${listingId}`)
+                .send({ bid: "500.00" });
             expect(res.statusCode).toEqual(401);
         });
     })
