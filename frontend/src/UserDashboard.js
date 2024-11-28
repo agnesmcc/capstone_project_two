@@ -6,10 +6,15 @@ import { useQuery } from "react-query";
 import "./UserDashboard.css";
 
 const getWatchedListings = async (username) => {
-    console.log('fetching watched listings for', username);
+    let data = {};
+    console.log('dashboard listings for', username);
     let res = await Api.getWatchedListings(username);
-    console.log(res);
-    return res;
+    console.log('watching', res);
+    data.watchedListings = res;
+    res = await Api.getListingsBidOn(username);
+    console.log('bidding on', res);
+    data.ListingsBidOn = res;
+    return data;
 }
 
 const UserDashboard = () => {
@@ -33,8 +38,8 @@ const UserDashboard = () => {
     return (
         <div className="user-dashboard">
             <h1>User Dashboard</h1>
-            <UserDashboardDetail type={"Bidding"}/>
-            <UserDashboardDetail type={"Watching"} listings={data}/>
+            <UserDashboardDetail type={"Bidding"} listings={data.ListingsBidOn}/>
+            <UserDashboardDetail type={"Watching"} listings={data.watchedListings}/>
             <UserDashboardDetail type={"Won"}/>
             <UserDashboardDetail type={"Sold"}/>
         </div>

@@ -102,6 +102,12 @@ class Api {
     let res = await this.request(`bidders/${username}/${listing_id}`, data, "post");
     return res.bid;
   }
+
+  /** get listings bid on by user **/
+  static async getListingsBidOn(username) {
+    let res = await this.request(`users/${username}/bidding_on`);
+    return res;
+  }
 }
 
 export default Api;
