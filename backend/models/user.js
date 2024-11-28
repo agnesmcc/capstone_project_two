@@ -122,7 +122,7 @@ class User {
 
     static async isBiddingOn(username) {
         const result = await db.query(
-            `SELECT l.*
+            `SELECT DISTINCT l.id, l.created_by, l.title, l.description, l.image, l.starting_bid, l.category, l.end_datetime
              FROM bidders b
              JOIN listings l ON b.listing_id = l.id
              WHERE b.bidder = $1`,
