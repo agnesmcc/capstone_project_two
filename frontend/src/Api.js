@@ -77,10 +77,23 @@ class Api {
     return res.listing;
   }
 
+  /** Unwatch a listing. */
+  static async unwatchListing(username, listing_id) {
+    const data = { listing_id };
+    let res = await this.request(`watched-listings/by-username/${username}`, data, "delete");
+    return res.listing;
+  }
+
   /** Get listings watched by username. */
   static async getWatchedListings(username) {
     let res = await this.request(`listings/watched_by/${username}`);
     return res.listings;
+  }
+
+  /** Check if user watches a listing */
+  static async isWatching(username, listing_id) {
+    let res = await this.request(`users/${username}/watches/${listing_id}`);
+    return res;
   }
 }
 

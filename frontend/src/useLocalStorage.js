@@ -2,6 +2,7 @@ import { useState } from "react";
 
 const useLocalStorage = (key, initialValue) => {
     const [storedValue, setStoredValue] = useState(() => {
+        console.log("fetching token from local storage");
         try {
             const item = window.localStorage.getItem(key);
             return item ? JSON.parse(item) : initialValue;

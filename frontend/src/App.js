@@ -19,7 +19,7 @@ function App() {
   const [token, setToken] = useLocalStorage('token', null);
   Api.token = token;
 
-  const { data } = useQuery(
+  const { data, isLoading } = useQuery(
     ['user', token],
     () => {
       console.log('fetching user');
@@ -27,9 +27,13 @@ function App() {
     },
     {
       enabled: !!token,
-      cacheTime: 1000 * 60 * 60, // 1 hour cache time
+      cacheTime: 1000 * 60 * 60, // 1 hour cache time,
+      staleTime: 1000 * 60 * 5, // 5 minutes
     }
   );
+  
+  if (isLoading) return <div>Loading...</div>;
+  
   console.log(data);
   const user = data ? data : null;
 

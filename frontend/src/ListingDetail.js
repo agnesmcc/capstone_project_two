@@ -1,13 +1,16 @@
 import { React, useContext } from "react";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import Api from "./Api";
-import { useQuery } from "react-query";
 import "./ListingDetail.css";
 import { UserContext } from "./UserContext";
 
-const fetchListing = async (id) => {
+const fetchListing = async (user, id) => {
     console.log('fetching listing details');
     let res = await Api.getListing(id);
+    console.log(res);
+    let watchResult = await Api.isWatching(user.username, id);
+    res.isWatching = watchResult.isWatching;
     console.log(res);
     return res;
 };
@@ -15,14 +18,24 @@ const fetchListing = async (id) => {
 const ListingDetail = () => {
     const { user } = useContext(UserContext);
     const { id } = useParams();
-    const { data, error, isLoading } = useQuery(
-        ['listing', id], () => fetchListing(id), {staleTime: 5000});
+    const { data, error, isLoading, refetch } = useQuery(
+        ['listing', id], () => fetchListing(user, id), {
+            enabled: !!user?.username
+        }
+    );
 
     const watchListing = async (id) => {
         console.log('watching listing');
         let res = await Api.watchListing(user.username, id);
         console.log(res);
-        return res;
+        refetch();
+    }
+
+    const stopWatchingListing = async (id) => {
+        console.log('stopping watching listing');
+        let res = await Api.unwatchListing(user.username, id);
+        console.log(res);
+        refetch();
     }
 
     if (isLoading) return <div>Loading...</div>;
@@ -41,7 +54,11 @@ const ListingDetail = () => {
             </div>
             <div className="listing-detail-description"><b>Item description from the seller</b></div>
             <div className="listing-detail-description">{data.description}</div>
-            <button onClick={() => watchListing(data.id)}>Watch</button>
+            {!data.isWatching ? 
+                <button onClick={() => watchListing(data.id)}>Watch</button>
+            : 
+                <button onClick={() => stopWatchingListing(data.id)}>Unwatch</button>
+            }
         </div>
     );
 }
