@@ -5,6 +5,8 @@ const request = require("supertest");
 const db = require("../db.js");
 const app = require("../app");
 const User = require("../models/user");
+const WatchedListing = require("../models/watchedListing");
+const Listing = require("../models/listing");
 
 const {
     commonBeforeAll,
@@ -16,7 +18,13 @@ const {
     adminToken,
 } = require("./_testCommon");
 
-beforeAll(commonBeforeAll);
+let listingId;
+
+beforeAll(async () => {
+    await commonBeforeAll();
+    const listings = await Listing.getListingsByCreatedBy("u1");
+    listingId = listings[0].id;
+});
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
@@ -187,5 +195,31 @@ describe('User', () => {
             const res = await request(app).get("/users/u1");
             expect(res.statusCode).toEqual(401);
         });
+    });
+
+    describe("GET /:username/watches/:listingId", () => {
+        test("works with admin token", async () => {
+            await WatchedListing.addWatchedListing("u1", listingId);
+            const res = await request(app)
+                .get(`/users/u1/watches/${listingId}`)
+                .set({ Authorization: `Bearer ${adminToken}` });
+            expect(res.body).toEqual({ isWatching: true });
+        });
+
+        test("works with matching user", async () => {
+            await WatchedListing.addWatchedListing("u1", listingId);
+            const res = await request(app)
+                .get(`/users/u1/watches/${listingId}`)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toEqual({ isWatching: true });
+        })
+
+        test("unauth with not matching token", async () => {
+            await WatchedListing.addWatchedListing("u1", listingId);
+            const res = await request(app)
+                .get(`/users/u1/watches/${listingId}`)
+                .set({ Authorization: `Bearer ${u2Token}` });
+            expect(res.statusCode).toEqual(401);
+        })
     });
 });

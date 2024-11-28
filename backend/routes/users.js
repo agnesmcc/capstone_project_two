@@ -43,4 +43,13 @@ router.get("/:username", ensureCorrectUserOrAdmin, async function (req, res, nex
     }
 });
 
+router.get("/:username/watches/:listing_id", ensureCorrectUserOrAdmin, async function (req, res, next) {
+    try {
+        const result = await User.isWatching(req.params.username, req.params.listing_id);
+        return res.json({ isWatching: result });
+    } catch (err) {
+        return next(err);
+    }
+});
+
 module.exports = router;

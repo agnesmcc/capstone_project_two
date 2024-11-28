@@ -3,6 +3,7 @@
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const { BadRequestError, NotFoundError, UnauthorizedError } = require("../expressError");
+const { restart } = require("nodemon");
 
 class User {
     static async getAllUsers() {
@@ -103,6 +104,20 @@ class User {
           throw new NotFoundError(`No user: ${username}`);
         }
         return result.rows[0];
+    }
+
+    static async isWatching(username, listing_id) {
+        const result = await db.query(
+            `SELECT username, listing_id
+             FROM watched_listings
+             WHERE username = $1 AND listing_id = $2`,
+            [username, listing_id]  
+        )
+        if (result.rows.length === 0) {
+          return false
+        } else {
+          return true
+        }
     }
 }
 

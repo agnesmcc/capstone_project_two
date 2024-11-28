@@ -3,9 +3,16 @@
 const db = require("../db.js");
 const { BadRequestError, NotFoundError, UnauthorizedError } = require("../expressError.js");
 const User = require("./user.js");
+const WatchedListing = require("./watchedListing.js");
+const Listing = require("./listing.js");
+const Category = require("./category.js");
 
 beforeEach(async () => {
+    await db.query("DELETE FROM watched_listings");    
+    await db.query("DELETE FROM listings");
+    await db.query("DELETE FROM categories");
     await db.query("DELETE FROM users");
+    await Category.addCategory("furniture");
 });
 
 afterAll(async () => {
@@ -107,4 +114,38 @@ describe("User", () => {
             email: "test@test"
         });
     });
+
+    test("isWatching", async () => {
+        await User.register({
+            username: "testUser",
+            firstName: "first",
+            lastName: "last",
+            password: "p@ssword",
+            email: "test@test"
+        });
+        const result = await User.isWatching("testUser", 1);
+        expect(result).toEqual(false);
+    })
+
+    test("isWatching returns true", async () => {
+        await User.register({
+            username: "testUser",
+            firstName: "first",
+            lastName: "last",
+            password: "p@ssword",
+            email: "test@test"
+        });
+        const listing = await Listing.addListing({ 
+            title: "testListing", 
+            description: "testDescription", 
+            image: "testImage",
+            starting_bid: 100,
+            category: "furniture",
+            created_by: "testUser",
+            end_datetime: new Date()
+        });
+        await WatchedListing.addWatchedListing("testUser", listing.id);
+        const result = await User.isWatching("testUser", listing.id);
+        expect(result).toEqual(true);
+    })
 })
