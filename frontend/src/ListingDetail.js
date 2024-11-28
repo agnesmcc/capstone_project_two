@@ -14,7 +14,11 @@ const fetchListing = async (user, id) => {
     console.log(res);
     res.isWatching = watchResult.isWatching;
     let bids = await Api.getBidsForListing(id);
+    console.log(res);
     res.bids = bids;
+    if (res.bids.length > 0) {
+        res.currentBid = Math.max(...res.bids.map(bid => parseFloat(bid.bid)));
+    }    
     return res;
 };
 
@@ -51,8 +55,7 @@ const ListingDetail = () => {
                 <div className="listing-detail-data">
                     <div className="listing-detail-title">{data.title}</div>
                     <hr></hr>                
-                    <div className="listing-detail-starting-bid"><b>${data.starting_bid}</b></div>
-                    <div>or Best Offer</div>
+                    <div>{data.currentBid ? `$${data.currentBid}` : "No bids yet"}</div>
                     <div>{data.bids ? data.bids.length : 0} bids</div>
                 </div>
             </div>
