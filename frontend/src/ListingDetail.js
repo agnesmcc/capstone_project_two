@@ -11,8 +11,10 @@ const fetchListing = async (user, id) => {
     let res = await Api.getListing(id);
     console.log(res);
     let watchResult = await Api.isWatching(user.username, id);
-    res.isWatching = watchResult.isWatching;
     console.log(res);
+    res.isWatching = watchResult.isWatching;
+    let bids = await Api.getBidsForListing(id);
+    res.bids = bids;
     return res;
 };
 
@@ -51,6 +53,7 @@ const ListingDetail = () => {
                     <hr></hr>                
                     <div className="listing-detail-starting-bid"><b>${data.starting_bid}</b></div>
                     <div>or Best Offer</div>
+                    <div>{data.bids ? data.bids.length : 0} bids</div>
                 </div>
             </div>
             <div className="listing-detail-description"><b>Item description from the seller</b></div>
