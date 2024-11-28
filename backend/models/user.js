@@ -119,6 +119,17 @@ class User {
           return true
         }
     }
+
+    static async isBiddingOn(username) {
+        const result = await db.query(
+            `SELECT l.*
+             FROM bidders b
+             JOIN listings l ON b.listing_id = l.id
+             WHERE b.bidder = $1`,
+            [username]
+        )
+        return result.rows
+    }
 }
 
 module.exports = User;

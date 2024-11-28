@@ -7,6 +7,7 @@ const app = require("../app");
 const User = require("../models/user");
 const WatchedListing = require("../models/watchedListing");
 const Listing = require("../models/listing");
+const Bidder = require("../models/bidder");
 
 const {
     commonBeforeAll,
@@ -16,6 +17,7 @@ const {
     u1Token,
     u2Token,
     adminToken,
+    testListing,
 } = require("./_testCommon");
 
 let listingId;
@@ -218,6 +220,32 @@ describe('User', () => {
             await WatchedListing.addWatchedListing("u1", listingId);
             const res = await request(app)
                 .get(`/users/u1/watches/${listingId}`)
+                .set({ Authorization: `Bearer ${u2Token}` });
+            expect(res.statusCode).toEqual(401);
+        })
+    });
+
+    describe("GET /users/:username/bidding_on", () => {
+        test("works with admin token", async () => {
+            await Bidder.addBid("u1", listingId, "100.00");
+            const res = await request(app)
+                .get(`/users/u1/bidding_on`)
+                .set({ Authorization: `Bearer ${adminToken}` });
+            expect(res.body.length).toEqual(1);
+        });
+
+        test("works with matching user", async () => {
+            await Bidder.addBid("u1", listingId, "100.00");
+            const res = await request(app)
+                .get(`/users/u1/bidding_on`)
+                .set({ Authorization: `Bearer ${u1Token}` });
+                expect(res.body.length).toEqual(1);
+        })
+
+        test("unauth with not matching token", async () => {
+            await Bidder.addBid("u1", listingId, "100.00");
+            const res = await request(app)
+                .get(`/users/u1/bidding_on`)
                 .set({ Authorization: `Bearer ${u2Token}` });
             expect(res.statusCode).toEqual(401);
         })

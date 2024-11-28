@@ -18,6 +18,8 @@ const testListing = {
 
 async function commonBeforeAll() {
   // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM bidders");
+  // noinspection SqlWithoutWhere
   await db.query("DELETE FROM watched_listings");
   // noinspection SqlWithoutWhere
   await db.query("DELETE FROM listings");

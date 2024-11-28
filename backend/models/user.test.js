@@ -6,8 +6,10 @@ const User = require("./user.js");
 const WatchedListing = require("./watchedListing.js");
 const Listing = require("./listing.js");
 const Category = require("./category.js");
+const Bidder = require("./bidder.js");
 
 beforeEach(async () => {
+    await db.query("DELETE FROM bidders");
     await db.query("DELETE FROM watched_listings");    
     await db.query("DELETE FROM listings");
     await db.query("DELETE FROM categories");
@@ -147,5 +149,27 @@ describe("User", () => {
         await WatchedListing.addWatchedListing("testUser", listing.id);
         const result = await User.isWatching("testUser", listing.id);
         expect(result).toEqual(true);
+    })
+
+    test("isBiddingOn", async () => {
+        await User.register({
+            username: "testUser",
+            firstName: "first",
+            lastName: "last",
+            password: "p@ssword",
+            email: "test@test"
+        });
+        const listing = await Listing.addListing({ 
+            title: "testListing", 
+            description: "testDescription", 
+            image: "testImage",
+            starting_bid: 100,
+            category: "furniture",
+            created_by: "testUser",
+            end_datetime: new Date()
+        });
+        await Bidder.addBid("testUser", listing.id, 100);
+        const result = await User.isBiddingOn("testUser");
+        expect(result[0].id).toEqual(listing.id);
     })
 })
