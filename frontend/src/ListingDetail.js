@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Api from "./Api";
 import "./ListingDetail.css";
 import { UserContext } from "./UserContext";
+import ListingDetailBidForm from "./ListingDetailBidForm";
 
 const fetchListing = async (user, id) => {
     console.log('fetching listing details');
@@ -59,6 +60,7 @@ const ListingDetail = () => {
             : 
                 <button onClick={() => stopWatchingListing(data.id)}>Unwatch</button>
             }
+            <ListingDetailBidForm listingId={data.id} updateListing={refetch} />
         </div>
     );
 }

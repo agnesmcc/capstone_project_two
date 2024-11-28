@@ -95,6 +95,13 @@ class Api {
     let res = await this.request(`users/${username}/watches/${listing_id}`);
     return res;
   }
+
+  /** Add bid on listing */
+  static async addBid(username, listing_id, bid) {
+    const data = { bid };
+    let res = await this.request(`bidders/${username}/${listing_id}`, data, "post");
+    return res.bid;
+  }
 }
 
 export default Api;
