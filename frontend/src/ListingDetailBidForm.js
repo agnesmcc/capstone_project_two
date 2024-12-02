@@ -28,8 +28,16 @@ const ListingDetailBidForm = ({ listingId, updateListing }) => {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <input type="text" onChange={handleChange} name="bid" placeholder="Bid Amount" value={formData.bid} />
-                <button type="submit">Bid</button>
+                <div className="input-group col-sm-6">
+                    <input type="text" className="form-control" 
+                        onChange={handleChange} 
+                        name="bid" 
+                        placeholder="Bid Amount" 
+                        value={formData.bid} />
+                    <span className="input-group-btn">
+                        <button type="submit" className="btn btn-primary">Bid</button>
+                    </span>
+                </div>
             </form>
         </div>
     );

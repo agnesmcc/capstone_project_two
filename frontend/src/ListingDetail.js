@@ -5,22 +5,7 @@ import Api from "./Api";
 import "./ListingDetail.css";
 import { UserContext } from "./UserContext";
 import ListingDetailBidForm from "./ListingDetailBidForm";
-
-const fetchListing = async (user, id) => {
-    console.log('fetching listing details');
-    let res = await Api.getListing(id);
-    console.log(res);
-    let watchResult = await Api.isWatching(user.username, id);
-    console.log(res);
-    res.isWatching = watchResult.isWatching;
-    let bids = await Api.getBidsForListing(id);
-    console.log(res);
-    res.bids = bids;
-    if (res.bids.length > 0) {
-        res.currentBid = Math.max(...res.bids.map(bid => parseFloat(bid.bid)));
-    }    
-    return res;
-};
+import fetchListing from "./ListingHelper";
 
 const ListingDetail = () => {
     const { user } = useContext(UserContext);
@@ -53,20 +38,20 @@ const ListingDetail = () => {
             <div className="listing-detail-body">
                 <img src={data.image} alt={data.title} className="listing-detail-img" />
                 <div className="listing-detail-data">
-                    <div className="listing-detail-title">{data.title}</div>
+                    <h5 className="listing-detail-title">{data.title}</h5>
                     <hr></hr>                
-                    <div>{data.currentBid ? `$${data.currentBid}` : "No bids yet"}</div>
+                    <div>{data.currentBid ? `Current bid: $${data.currentBid}` : "No bids yet"}</div>
                     <div>{data.bids ? data.bids.length : 0} bids</div>
+                    {!data.isWatching ? 
+                        <button className="btn btn-primary" onClick={() => watchListing(data.id)}>Watch</button>
+                    : 
+                        <button className="btn btn-secondary" onClick={() => stopWatchingListing(data.id)}>Unwatch</button>
+                    }
+                    <ListingDetailBidForm listingId={data.id} updateListing={refetch} />
                 </div>
             </div>
             <div className="listing-detail-description"><b>Item description from the seller</b></div>
             <div className="listing-detail-description">{data.description}</div>
-            {!data.isWatching ? 
-                <button onClick={() => watchListing(data.id)}>Watch</button>
-            : 
-                <button onClick={() => stopWatchingListing(data.id)}>Unwatch</button>
-            }
-            <ListingDetailBidForm listingId={data.id} updateListing={refetch} />
         </div>
     );
 }

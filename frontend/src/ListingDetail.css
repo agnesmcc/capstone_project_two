@@ -1,3 +1,7 @@
+.listing-detail {
+  margin: 10px;
+}
+
 .listing-detail-body {
   display: flex;
   align-items: top;
@@ -23,6 +27,6 @@
 }
 
 .listing-detail-description {
-  margin-left: 50px;
+  margin-left: 10px;
   text-align: left;
 }
