@@ -13,8 +13,7 @@ const testListing = {
     description: "a nice couch",
     image: "couch.jpg",
     starting_bid: "500.00",
-    category: "furniture",
-    end_datetime: new Date('2022-01-01T05:00:00.000Z')
+    category: "furniture"
 };
 
 beforeEach(async () => {
@@ -39,6 +38,15 @@ describe("Listing", () => {
         let result = await Listing.addListing(testListing);
         result = await Listing.getAllListings();
         expect(result).toMatchObject([testListing]);
+        expect(result[0].end_datetime.getDate() - new Date().getDate()).toEqual(7);
+    });
+
+    test("can add a listing with a custom listing duration", async () => {
+        await Category.addCategory("furniture");
+        let result = await Listing.addListing(testListing, 3);
+        result = await Listing.getAllListings();
+        expect(result).toMatchObject([testListing]);
+        expect(result[0].end_datetime.getDate() - new Date().getDate()).toEqual(3);
     });
 
     test("can get a listing", async () => {
@@ -71,8 +79,7 @@ describe("Listing", () => {
             description: "a nice couch",
             image: "couch.jpg",
             starting_bid: "500.00",
-            category: "furniture",
-            end_datetime: "2022-01-01 00:00:00"
+            category: "furniture"
         });
         expect(result).toMatchObject({
             created_by: "testUser",
@@ -80,8 +87,7 @@ describe("Listing", () => {
             description: "a nice couch",
             image: "couch.jpg",
             starting_bid: "500.00",
-            category: "furniture",
-            end_datetime: new Date('2022-01-01T00:00:00.000Z')
+            category: "furniture"
         });
     });
 
@@ -93,8 +99,7 @@ describe("Listing", () => {
                 description: "a nice couch",
                 image: "couch.jpg",
                 starting_bid: "500.00",
-                category: "furniture",
-                end_datetime: "2022-01-01 00:00:00"
+                category: "furniture"
             });
         }).rejects.toThrow(NotFoundError);
     });

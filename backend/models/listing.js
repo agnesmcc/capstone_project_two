@@ -3,6 +3,7 @@
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const { BadRequestError, NotFoundError } = require("../expressError");
+const { LISTING_DURATION } = require("../config");
 
 class Listing {
     static async getAllListings() {
@@ -10,14 +11,17 @@ class Listing {
         return result.rows;
     }
 
-    static async addListing(listing) {
+    static async addListing(listing, listingDuration=LISTING_DURATION) {
+        const endDatetime = new Date();
+        endDatetime.setDate(endDatetime.getDate() + listingDuration);
+
         const result = await db.query(
             `INSERT INTO listings (
                 created_by, title, description, image, starting_bid, category, end_datetime
              )
              VALUES ($1, $2, $3, $4, $5, $6, $7)
              RETURNING id, created_by, title, description, image, starting_bid, category, created_at, end_datetime`,
-            [listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category, listing.end_datetime]
+            [listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category, endDatetime]
         );
         return result.rows[0];
     }
@@ -43,10 +47,10 @@ class Listing {
     static async updateListing(username, id, listing) {
         const result = await db.query(
             `UPDATE listings
-             SET created_by = $3, title = $4, description = $5, image = $6, starting_bid = $7, category = $8, end_datetime = $9
+             SET created_by = $3, title = $4, description = $5, image = $6, starting_bid = $7, category = $8
              WHERE created_by = $1 AND id = $2
              RETURNING id, created_by, title, description, image, starting_bid, category, end_datetime`,
-            [username, id, listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category, listing.end_datetime]
+            [username, id, listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category]
         );
         if (result.rows.length === 0) {
             throw new NotFoundError(`No listing: ${id}`);

@@ -2,10 +2,8 @@
 
 const request = require("supertest");
 
-const db = require("../db.js");
 const app = require("../app");
 const Listing = require("../models/listing");
-const User = require("../models/user");
 const WatchedListing = require("../models/watchedListing");
 
 const {
@@ -127,8 +125,7 @@ describe('Listing', () => {
                 description: "a nice couch",
                 image: "couch.jpg",
                 starting_bid: "500.00",
-                category: "furniture",
-                end_datetime: "2022-01-01T00:00:00.000Z"
+                category: "furniture"
             }).set({ Authorization: `Bearer ${adminToken}` });
             expect(res.body).toMatchObject({ listing: {
                 created_by: "u1",
@@ -136,8 +133,7 @@ describe('Listing', () => {
                 description: "a nice couch",
                 image: "couch.jpg",
                 starting_bid: "500.00",
-                category: "furniture",
-                end_datetime: "2022-01-01T00:00:00.000Z"
+                category: "furniture"
             } });
         });
 
@@ -153,8 +149,7 @@ describe('Listing', () => {
                 description: "a nice couch",
                 image: "couch.jpg",
                 starting_bid: "500.00",
-                category: "furniture",
-                end_datetime: "2022-01-01T00:00:00.000Z"
+                category: "furniture"
             }).set({ Authorization: `Bearer ${u1Token}` });
             expect(res.body).toMatchObject({ listing: {
                 created_by: "u1",
@@ -162,8 +157,7 @@ describe('Listing', () => {
                 description: "a nice couch",
                 image: "couch.jpg",
                 starting_bid: "500.00",
-                category: "furniture",
-                end_datetime: "2022-01-01T00:00:00.000Z"
+                category: "furniture"
             } });
         })
 
@@ -179,8 +173,7 @@ describe('Listing', () => {
                 description: "a nice couch",
                 image: "couch.jpg",
                 starting_bid: "500.00",
-                category: "furniture",
-                end_datetime: "2022-01-01T00:00:00.000Z"
+                category: "furniture"
             });
             expect(res.statusCode).toEqual(401);
         });

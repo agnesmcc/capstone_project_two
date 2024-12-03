@@ -12,8 +12,7 @@ const testListing = {
   description: "a nice couch",
   image: "couch.jpg",
   starting_bid: "500.00",
-  category: "furniture",
-  end_datetime: "2022-01-01T00:00:00.000Z"
+  category: "furniture"
 }
 
 async function commonBeforeAll() {
