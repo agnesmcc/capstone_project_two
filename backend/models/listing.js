@@ -1,9 +1,10 @@
 "use strict";
 
 const db = require("../db");
-const bcrypt = require("bcrypt");
-const { BadRequestError, NotFoundError } = require("../expressError");
-const { LISTING_DURATION } = require("../config");
+const { NotFoundError } = require("../expressError");
+const { LISTING_DURATION, JOB_QUEUE } = require("../config");
+const { boss } = require('../pgBoss');
+console.log(boss);
 
 class Listing {
     static async getAllListings() {
@@ -23,6 +24,13 @@ class Listing {
              RETURNING id, created_by, title, description, image, starting_bid, category, created_at, end_datetime`,
             [listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category, endDatetime]
         );
+
+        if (result.rows.length > 0) {
+            console.log(result.rows[0]);
+            const jobId = await boss.sendAfter('listingsToEnd', {listingId: result.rows[0].id}, {}, 10);
+            console.log(`created job ${jobId} in queue ${JOB_QUEUE}`)
+        }
+
         return result.rows[0];
     }
 

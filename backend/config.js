@@ -6,6 +6,7 @@ require("colors");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
 const LISTING_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
+const JOB_QUEUE = "listingsToEnd";
 
 const PORT = +process.env.PORT || 3001;
 
@@ -27,6 +28,7 @@ console.log("---");
 module.exports = {
   SECRET_KEY,
   LISTING_DURATION,
+  JOB_QUEUE,
   PORT,
   getDatabaseUri,
 };
