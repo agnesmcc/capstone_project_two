@@ -6,7 +6,7 @@ const User = require("./user.js");
 const Listing = require("./listing.js");
 const Category = require("./category.js");
 const WatchedListing = require("./watchedListing.js");
-const { LISTING_DURATION } = require("../config");
+const { LISTING_DURATION_SECONDS } = require("../config");
 
 const testListing = {
     created_by: "testUser",
@@ -39,7 +39,7 @@ describe("Listing", () => {
         let result = await Listing.addListing(testListing);
         result = await Listing.getAllListings();
         expect(result).toMatchObject([testListing]);
-        const expectedSeconds = LISTING_DURATION;
+        const expectedSeconds = LISTING_DURATION_SECONDS;
         const actualSeconds = (result[0].end_datetime.getTime() - new Date().getTime()) / 1000;
         expect(actualSeconds).toBeCloseTo(expectedSeconds, 0);
     });

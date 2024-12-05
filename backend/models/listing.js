@@ -2,7 +2,7 @@
 
 const db = require("../db");
 const { NotFoundError } = require("../expressError");
-const { LISTING_DURATION, JOB_QUEUE } = require("../config");
+const { LISTING_DURATION_SECONDS, JOB_QUEUE, PG_BOSS_ENABLED } = require("../config");
 const { boss } = require('../pgBoss');
 console.log(boss);
 
@@ -12,7 +12,7 @@ class Listing {
         return result.rows;
     }
 
-    static async addListing(listing, listingDuration=LISTING_DURATION) {
+    static async addListing(listing, listingDuration=LISTING_DURATION_SECONDS) {
         const endDatetime = new Date();
         endDatetime.setTime(endDatetime.getTime() + listingDuration * 1000);
 
@@ -25,9 +25,10 @@ class Listing {
             [listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category, endDatetime]
         );
 
-        if (result.rows.length > 0) {
+        console.log(process.env.PG_BOSS_ENABLED);
+        if (PG_BOSS_ENABLED === true && result.rows.length > 0) {
             console.log(result.rows[0]);
-            const jobId = await boss.sendAfter('listingsToEnd', {listingId: result.rows[0].id}, {}, 10);
+            const jobId = await boss.sendAfter('listingsToEnd', {listingId: result.rows[0].id}, {}, listingDuration * 1000);
             console.log(`created job ${jobId} in queue ${JOB_QUEUE}`)
         }
 

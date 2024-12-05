@@ -5,8 +5,9 @@ require("dotenv").config();
 require("colors");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
-const LISTING_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
+const LISTING_DURATION_SECONDS = 7 * 24 * 60 * 60; // 7 days
 const JOB_QUEUE = "listingsToEnd";
+const PG_BOSS_ENABLED = process.env.PG_BOSS_ENABLED || true;
 
 const PORT = +process.env.PORT || 3001;
 
@@ -27,8 +28,9 @@ console.log("---");
 
 module.exports = {
   SECRET_KEY,
-  LISTING_DURATION,
+  LISTING_DURATION_SECONDS,
   JOB_QUEUE,
+  PG_BOSS_ENABLED,
   PORT,
   getDatabaseUri,
 };
