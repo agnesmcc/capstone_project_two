@@ -13,7 +13,7 @@ class Listing {
 
     static async addListing(listing, listingDuration=LISTING_DURATION) {
         const endDatetime = new Date();
-        endDatetime.setDate(endDatetime.getDate() + listingDuration);
+        endDatetime.setTime(endDatetime.getTime() + listingDuration * 1000);
 
         const result = await db.query(
             `INSERT INTO listings (

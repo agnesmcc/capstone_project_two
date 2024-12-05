@@ -6,6 +6,7 @@ const User = require("./user.js");
 const Listing = require("./listing.js");
 const Category = require("./category.js");
 const WatchedListing = require("./watchedListing.js");
+const { LISTING_DURATION } = require("../config");
 
 const testListing = {
     created_by: "testUser",
@@ -38,15 +39,19 @@ describe("Listing", () => {
         let result = await Listing.addListing(testListing);
         result = await Listing.getAllListings();
         expect(result).toMatchObject([testListing]);
-        expect(result[0].end_datetime.getDate() - new Date().getDate()).toEqual(7);
+        const expectedSeconds = LISTING_DURATION;
+        const actualSeconds = (result[0].end_datetime.getTime() - new Date().getTime()) / 1000;
+        expect(actualSeconds).toBeCloseTo(expectedSeconds, 0);
     });
 
     test("can add a listing with a custom listing duration", async () => {
         await Category.addCategory("furniture");
-        let result = await Listing.addListing(testListing, 3);
+        let result = await Listing.addListing(testListing, 60 * 1000);
         result = await Listing.getAllListings();
         expect(result).toMatchObject([testListing]);
-        expect(result[0].end_datetime.getDate() - new Date().getDate()).toEqual(3);
+        const expectedSeconds = 60 * 1000;
+        const actualSeconds = (result[0].end_datetime.getTime() - new Date().getTime()) / 1000;
+        expect(actualSeconds).toBeCloseTo(expectedSeconds, 0);
     });
 
     test("can get a listing", async () => {
