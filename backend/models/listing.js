@@ -4,11 +4,10 @@ const db = require("../db");
 const { NotFoundError } = require("../expressError");
 const { LISTING_DURATION_SECONDS, JOB_QUEUE, PG_BOSS_ENABLED } = require("../config");
 const { boss } = require('../pgBoss');
-console.log(boss);
 
 class Listing {
     static async getAllListings() {
-        const result = await db.query(`SELECT * FROM listings`);
+        const result = await db.query(`SELECT * FROM listings WHERE ended = false`);
         return result.rows;
     }
 
@@ -28,7 +27,7 @@ class Listing {
         console.log(process.env.PG_BOSS_ENABLED);
         if (PG_BOSS_ENABLED === true && result.rows.length > 0) {
             console.log(result.rows[0]);
-            const jobId = await boss.sendAfter('listingsToEnd', {listingId: result.rows[0].id}, {}, listingDuration * 1000);
+            const jobId = await boss.sendAfter('listingsToEnd', {listingId: result.rows[0].id}, {}, listingDuration);
             console.log(`created job ${jobId} in queue ${JOB_QUEUE}`)
         }
 
