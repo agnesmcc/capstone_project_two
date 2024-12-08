@@ -71,4 +71,22 @@ router.get("/watched_by/:username", ensureCorrectUserOrAdmin, async function (re
     }
 })
 
+router.get("/won_by/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
+    try {
+        const listings = await Listing.getListingsWonByUser(req.params.username);
+        return res.json({ listings });
+    } catch (err) {
+        return next(err);
+    }
+})
+
+router.get("/sold_by/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
+    try {
+        const listings = await Listing.getListingsSoldByUser(req.params.username);
+        return res.json({ listings });
+    } catch (err) {
+        return next(err);
+    }
+})
+
 module.exports = router;

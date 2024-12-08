@@ -4,6 +4,7 @@ const request = require("supertest");
 
 const app = require("../app");
 const Listing = require("../models/listing");
+const Bidder = require("../models/bidder");
 const WatchedListing = require("../models/watchedListing");
 
 const {
@@ -228,6 +229,42 @@ describe('Listing', () => {
         test("does not work when not logged in", async () => {
             const res = await request(app)
                 .get(`/listings/watched_by/u1`);
+            expect(res.statusCode).toEqual(401);
+        });
+    });
+
+    describe("GET /won_by/:username", () => {
+        test("works when logged in as matching user", async () => {
+            await Bidder.addBid("u1", listingId, "100.00");
+            await Listing.determineWinner(listingId);
+            const res = await request(app)
+                .get(`/listings/won_by/u1`)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toMatchObject({ listings: [testListing] });
+        });
+
+        test("does not work when logged in as non-matching user", async () => {
+            const res = await request(app)
+                .get(`/listings/won_by/u1`)
+                .set({ Authorization: `Bearer ${u2Token}` });
+            expect(res.statusCode).toEqual(401);
+        });
+    });
+
+    describe("GET /sold_by/:username", () => {
+        test("works when logged in as matching user", async () => {
+            await Bidder.addBid("u2", listingId, "100.00");
+            await Listing.determineWinner(listingId);
+            const res = await request(app)
+                .get(`/listings/sold_by/u1`)
+                .set({ Authorization: `Bearer ${u1Token}` });
+            expect(res.body).toMatchObject({ listings: [testListing] });
+        });
+
+        test("does not work when logged in as non-matching user", async () => {
+            const res = await request(app)
+                .get(`/listings/sold_by/u1`)
+                .set({ Authorization: `Bearer ${u2Token}` });
             expect(res.statusCode).toEqual(401);
         });
     });
