@@ -114,6 +114,26 @@ class Listing {
         }
         return result.rows[0];
     }
+
+    static async getListingsWonByUser(username) {
+        const result = await db.query(
+            `SELECT l.*
+             FROM listings l
+             WHERE l.winner = $1 AND l.ended = true`,
+            [username]
+        )
+        return result.rows;
+    }
+
+    static async getListingsSoldByUser(username) {
+        const result = await db.query(
+            `SELECT l.*
+             FROM listings l
+             WHERE l.created_by = $1 AND l.ended = true`,
+            [username]
+        )
+        return result.rows;
+    }
 }
 
 module.exports = Listing;

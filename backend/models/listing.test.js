@@ -190,4 +190,33 @@ describe("Listing", () => {
             expect(result.ended).toBe(true);
         });
     });
+
+    describe("getListingsWonByUser", () => {
+        test("can get listings won by user", async () => {
+            await Category.addCategory("furniture");
+            const listing = await Listing.addListing(testListing);
+            await Bidder.addBid("testUser", listing.id, "100.00");
+            await Listing.determineWinner(listing.id);
+            const result = await Listing.getListingsWonByUser("testUser");
+            expect(result).toMatchObject([testListing]);
+        });
+    });
+
+    describe("getListingsSoldByUser", () => {
+        test("can get listings sold by user", async () => {
+            await User.register({
+                username: "testUser2",
+                firstName: "Test2",
+                lastName: "User2",
+                password: "testUser2",
+                email: "a@b2.com"
+            });
+            await Category.addCategory("furniture");
+            const listing = await Listing.addListing(testListing);
+            await Bidder.addBid("testUser2", listing.id, "100.00");
+            await Listing.determineWinner(listing.id);
+            const result = await Listing.getListingsSoldByUser("testUser");
+            expect(result).toMatchObject([testListing]);
+        });
+    });
 });
