@@ -9,7 +9,7 @@ import { UserContext } from "./UserContext";
 const ListingCard = ({ listing }) => {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
-    const { data, error, isLoading, refetch } = useQuery(
+    const { data, error, isLoading } = useQuery(
         ['listing', listing.id], () => fetchListing(user, listing.id), {
             enabled: !!user?.username
         }

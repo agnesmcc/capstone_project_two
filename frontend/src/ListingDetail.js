@@ -6,6 +6,7 @@ import "./ListingDetail.css";
 import { UserContext } from "./UserContext";
 import ListingDetailBidForm from "./ListingDetailBidForm";
 import fetchListing from "./ListingHelper";
+import ListingCountdown from "./ListingCountdown";
 
 const ListingDetail = () => {
     const { user } = useContext(UserContext);
@@ -47,7 +48,8 @@ const ListingDetail = () => {
                     : 
                         <button className="btn btn-secondary" onClick={() => stopWatchingListing(data.id)}>Unwatch</button>
                     }
-                    <ListingDetailBidForm listingId={data.id} updateListing={refetch} />
+                    <ListingCountdown end_datetime={data.end_datetime} updateListing={refetch} />
+                    {!data.ended && <ListingDetailBidForm listingId={data.id} updateListing={refetch} />}
                 </div>
             </div>
             <div className="listing-detail-description"><b>Item description from the seller</b></div>
