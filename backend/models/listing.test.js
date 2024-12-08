@@ -6,6 +6,7 @@ const User = require("./user.js");
 const Listing = require("./listing.js");
 const Category = require("./category.js");
 const WatchedListing = require("./watchedListing.js");
+const Bidder = require("./bidder.js");
 const { LISTING_DURATION_SECONDS } = require("../config");
 
 const testListing = {
@@ -18,10 +19,19 @@ const testListing = {
 };
 
 beforeEach(async () => {
+    await db.query("DELETE FROM bidders");
     await db.query("DELETE FROM watched_listings");
     await db.query("DELETE FROM listings");
     await db.query("DELETE FROM users");
     await db.query("DELETE FROM categories");
+
+    await User.register({
+        username: "testUser",
+        firstName: "Test",
+        lastName: "User",
+        password: "testUser",
+        email: "a@b.com"
+    });
 });
 
 afterAll(async () => {
@@ -117,17 +127,67 @@ describe("Listing", () => {
     });
 
     test("can get watched listings by username", async () => {
-        await User.register({
-            username: "testUser",
-            firstName: "Test",
-            lastName: "User",
-            password: "testUser",
-            email: "test@test"
-        })
         await Category.addCategory("furniture");
         const listing = await Listing.addListing(testListing);
         await WatchedListing.addWatchedListing("testUser", listing.id);
         const result = await Listing.getWatchedListingsByUsername("testUser");
         expect(result).toMatchObject([testListing]);
+    });
+
+    describe("determineWinner", () => {
+        test("can determine a winner", async () => {
+            await Category.addCategory("furniture");
+            const listing = await Listing.addListing(testListing);
+            await Bidder.addBid("testUser", listing.id, "100.00");
+            const result = await Listing.determineWinner(listing.id);
+            expect(result).toMatchObject(testListing);
+            expect(result.winner).toBe("testUser");
+            expect(result.ended).toBe(true);
+        });
+
+        test("the highest bidder is declared the winner", async () => {
+            await User.register({
+                username: "testUser2",
+                firstName: "Test2",
+                lastName: "User2",
+                password: "testUser2",
+                email: "a@b2.com"
+            });
+            await Category.addCategory("furniture");
+            const listing = await Listing.addListing(testListing);
+            await Bidder.addBid("testUser", listing.id, "100.00");
+            await Bidder.addBid("testUser2", listing.id, "200.00");
+            const result = await Listing.determineWinner(listing.id);
+            expect(result).toMatchObject(testListing);
+            expect(result.winner).toBe("testUser2");
+            expect(result.ended).toBe(true);
+        });
+
+        test("works if two users bid the same amount", async () => {
+            await User.register({
+                username: "testUser2",
+                firstName: "Test2",
+                lastName: "User2",
+                password: "testUser2",
+                email: "a@b2.com"
+            });
+            await Category.addCategory("furniture");
+            const listing = await Listing.addListing(testListing);
+            await Bidder.addBid("testUser", listing.id, "100.00");
+            await Bidder.addBid("testUser2", listing.id, "100.00");
+            const result = await Listing.determineWinner(listing.id);
+            expect(result).toMatchObject(testListing);
+            expect(result.winner).toBe("testUser");
+            expect(result.ended).toBe(true);
+        });
+
+        test("if there are no bids, the listing is still ended", async () => {
+            await Category.addCategory("furniture");
+            const listing = await Listing.addListing(testListing);
+            const result = await Listing.determineWinner(listing.id);
+            expect(result).toMatchObject(testListing);
+            expect(result.winner).toBe(null);
+            expect(result.ended).toBe(true);
+        });
     });
 });

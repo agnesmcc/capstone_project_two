@@ -21,6 +21,7 @@ CREATE TABLE listings (
   current_bid NUMERIC,
   category VARCHAR(25) REFERENCES categories (title) ON DELETE SET NULL,
   winner VARCHAR(25),
+  ended BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   end_datetime TIMESTAMPTZ NOT NULL
 );

@@ -85,6 +85,36 @@ class Listing {
         )
         return result.rows;
     }
+
+    static async determineWinner(listingId) {
+        const bidder = await db.query(
+            `SELECT bidder
+             FROM bidders
+             WHERE listing_id = $1
+             ORDER BY bid DESC, created_at ASC
+             LIMIT 1`,
+            [listingId]
+        )
+        let result;
+        if (bidder.rows.length > 0) {
+            result = await db.query(
+                `UPDATE listings
+                 SET winner = $2, ended = true
+                 WHERE id = $1
+                 RETURNING id, created_by, title, description, image, starting_bid, category, end_datetime, winner, ended`,
+                [listingId, bidder.rows[0].bidder]
+            )
+        } else {
+            result = await db.query(
+                `UPDATE listings
+                 SET ended = true
+                 WHERE id = $1
+                 RETURNING id, created_by, title, description, image, starting_bid, category, end_datetime, winner, ended`,
+                [listingId]
+            )
+        }
+        return result.rows[0];
+    }
 }
 
 module.exports = Listing;
