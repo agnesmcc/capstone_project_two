@@ -12,7 +12,6 @@ const testListing = {
     title: "My Test Listing",
     description: "a nice couch",
     image: "couch.jpg",
-    starting_bid: "500.00",
     category: "furniture",
     end_datetime: new Date('2022-01-01T05:00:00.000Z')
 }

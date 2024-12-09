@@ -11,7 +11,6 @@ const testListing = {
   title: "My Test Listing",
   description: "a nice couch",
   image: "couch.jpg",
-  starting_bid: "500.00",
   category: "furniture"
 }
 

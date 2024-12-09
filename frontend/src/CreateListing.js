@@ -7,7 +7,6 @@ const CreateListing = () => {
         title: "", 
         description: "",
         image: "",
-        starting_bid: "",
         category: "",
     };
     const [formData, setFormData] = useState(initialFormState);

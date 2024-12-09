@@ -5,7 +5,6 @@ Table : Listings
     Column : title - text, required
     Column : description - text, optional
     Column : image - text, optional
-    Column : starting_bid - float, required
     Column : current_bid - float
     Column : category - text, required, foreign key to Categories.title
     Column : winner - text

@@ -125,7 +125,6 @@ describe('Listing', () => {
                 title: "My updated Test Listing",
                 description: "a nice couch",
                 image: "couch.jpg",
-                starting_bid: "500.00",
                 category: "furniture"
             }).set({ Authorization: `Bearer ${adminToken}` });
             expect(res.body).toMatchObject({ listing: {
@@ -133,7 +132,6 @@ describe('Listing', () => {
                 title: "My updated Test Listing",
                 description: "a nice couch",
                 image: "couch.jpg",
-                starting_bid: "500.00",
                 category: "furniture"
             } });
         });
@@ -149,7 +147,6 @@ describe('Listing', () => {
                 title: "My updated Test Listing",
                 description: "a nice couch",
                 image: "couch.jpg",
-                starting_bid: "500.00",
                 category: "furniture"
             }).set({ Authorization: `Bearer ${u1Token}` });
             expect(res.body).toMatchObject({ listing: {
@@ -157,7 +154,6 @@ describe('Listing', () => {
                 title: "My updated Test Listing",
                 description: "a nice couch",
                 image: "couch.jpg",
-                starting_bid: "500.00",
                 category: "furniture"
             } });
         })
@@ -173,7 +169,6 @@ describe('Listing', () => {
                 title: "My updated Test Listing",
                 description: "a nice couch",
                 image: "couch.jpg",
-                starting_bid: "500.00",
                 category: "furniture"
             });
             expect(res.statusCode).toEqual(401);

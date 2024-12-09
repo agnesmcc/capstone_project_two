@@ -141,7 +141,6 @@ describe("User", () => {
             title: "testListing", 
             description: "testDescription", 
             image: "testImage",
-            starting_bid: 100,
             category: "furniture",
             created_by: "testUser",
             end_datetime: new Date()
@@ -163,7 +162,6 @@ describe("User", () => {
             title: "testListing", 
             description: "testDescription", 
             image: "testImage",
-            starting_bid: 100,
             category: "furniture",
             created_by: "testUser",
             end_datetime: new Date()

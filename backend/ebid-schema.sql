@@ -17,7 +17,6 @@ CREATE TABLE listings (
   title TEXT NOT NULL,
   description TEXT,
   image TEXT,
-  starting_bid NUMERIC NOT NULL,
   current_bid NUMERIC,
   category VARCHAR(25) REFERENCES categories (title) ON DELETE SET NULL,
   winner VARCHAR(25),

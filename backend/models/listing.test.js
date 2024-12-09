@@ -14,7 +14,6 @@ const testListing = {
     title: "My Test Listing",
     description: "a nice couch",
     image: "couch.jpg",
-    starting_bid: "500.00",
     category: "furniture"
 };
 
@@ -93,7 +92,6 @@ describe("Listing", () => {
             title: "My Updated Test Listing",
             description: "a nice couch",
             image: "couch.jpg",
-            starting_bid: "500.00",
             category: "furniture"
         });
         expect(result).toMatchObject({
@@ -101,7 +99,6 @@ describe("Listing", () => {
             title: "My Updated Test Listing",
             description: "a nice couch",
             image: "couch.jpg",
-            starting_bid: "500.00",
             category: "furniture"
         });
     });
@@ -113,7 +110,6 @@ describe("Listing", () => {
                 title: "My Updated Test Listing",
                 description: "a nice couch",
                 image: "couch.jpg",
-                starting_bid: "500.00",
                 category: "furniture"
             });
         }).rejects.toThrow(NotFoundError);

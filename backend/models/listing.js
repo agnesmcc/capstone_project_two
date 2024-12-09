@@ -17,11 +17,11 @@ class Listing {
 
         const result = await db.query(
             `INSERT INTO listings (
-                created_by, title, description, image, starting_bid, category, end_datetime
+                created_by, title, description, image, category, end_datetime
              )
-             VALUES ($1, $2, $3, $4, $5, $6, $7)
-             RETURNING id, created_by, title, description, image, starting_bid, category, created_at, end_datetime`,
-            [listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category, endDatetime]
+             VALUES ($1, $2, $3, $4, $5, $6)
+             RETURNING id, created_by, title, description, image, category, created_at, end_datetime`,
+            [listing.created_by, listing.title, listing.description, listing.image, listing.category, endDatetime]
         );
 
         console.log(process.env.PG_BOSS_ENABLED);
@@ -55,10 +55,10 @@ class Listing {
     static async updateListing(username, id, listing) {
         const result = await db.query(
             `UPDATE listings
-             SET created_by = $3, title = $4, description = $5, image = $6, starting_bid = $7, category = $8
+             SET created_by = $3, title = $4, description = $5, image = $6, category = $7
              WHERE created_by = $1 AND id = $2
-             RETURNING id, created_by, title, description, image, starting_bid, category, end_datetime`,
-            [username, id, listing.created_by, listing.title, listing.description, listing.image, listing.starting_bid, listing.category]
+             RETURNING id, created_by, title, description, image, category, end_datetime`,
+            [username, id, listing.created_by, listing.title, listing.description, listing.image, listing.category]
         );
         if (result.rows.length === 0) {
             throw new NotFoundError(`No listing: ${id}`);
@@ -100,7 +100,7 @@ class Listing {
                 `UPDATE listings
                  SET winner = $2, ended = true
                  WHERE id = $1
-                 RETURNING id, created_by, title, description, image, starting_bid, category, end_datetime, winner, ended`,
+                 RETURNING id, created_by, title, description, image, category, end_datetime, winner, ended`,
                 [listingId, bidder.rows[0].bidder]
             )
         } else {
@@ -108,7 +108,7 @@ class Listing {
                 `UPDATE listings
                  SET ended = true
                  WHERE id = $1
-                 RETURNING id, created_by, title, description, image, starting_bid, category, end_datetime, winner, ended`,
+                 RETURNING id, created_by, title, description, image, category, end_datetime, winner, ended`,
                 [listingId]
             )
         }
