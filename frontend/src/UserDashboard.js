@@ -5,7 +5,7 @@ import { UserContext } from "./UserContext";
 import { useQuery } from "react-query";
 import "./UserDashboard.css";
 
-const getWatchedListings = async (username) => {
+const getDashboardListings = async (username) => {
     let data = {};
     console.log('dashboard listings for', username);
     let res = await Api.getWatchedListings(username);
@@ -13,15 +13,21 @@ const getWatchedListings = async (username) => {
     data.watchedListings = res;
     res = await Api.getListingsBidOn(username);
     console.log('bidding on', res);
-    data.ListingsBidOn = res;
+    data.listingsBidOn = res;
+    res = await Api.getWonListings(username);
+    console.log('won', res.listings);
+    data.wonListings = res.listings;
+    res = await Api.getSoldListings(username);
+    console.log('sold', res.listings);
+    data.soldListings = res.listings;
     return data;
 }
 
 const UserDashboard = () => {
     const { user } = useContext(UserContext);
     const { data, error, isLoading } = useQuery(
-      ['watched-listings', user?.username],
-      () => getWatchedListings(user.username),
+      ['dashboard-listings', user?.username],
+      () => getDashboardListings(user.username),
       {
           enabled: !!user?.username,
       }
@@ -38,10 +44,10 @@ const UserDashboard = () => {
     return (
         <div className="user-dashboard">
             <h1>User Dashboard</h1>
-            <UserDashboardDetail type={"Bidding"} listings={data.ListingsBidOn}/>
+            <UserDashboardDetail type={"Bidding"} listings={data.listingsBidOn}/>
             <UserDashboardDetail type={"Watching"} listings={data.watchedListings}/>
-            <UserDashboardDetail type={"Won"}/>
-            <UserDashboardDetail type={"Sold"}/>
+            <UserDashboardDetail type={"Won"} listings={data.wonListings}/>
+            <UserDashboardDetail type={"Sold"} listings={data.soldListings}/>
         </div>
     );
 }
