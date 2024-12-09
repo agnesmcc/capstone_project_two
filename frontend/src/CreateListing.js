@@ -9,7 +9,6 @@ const CreateListing = () => {
         image: "",
         starting_bid: "",
         category: "",
-        end_datetime: "",
     };
     const [formData, setFormData] = useState(initialFormState);
     const navigate = useNavigate();
@@ -81,16 +80,7 @@ const CreateListing = () => {
                     onChange={handleChange}
                 /></div>
             </div>
-            <div className="form-group row mb-3">
-                <label htmlFor="end_datetime" className="col-sm-3 col-form-label">End Date and Time</label>
-                <div className="col-sm-8"><input
-                    className="form-control"
-                    type="text"
-                    name="end_datetime"
-                    value={formData.end_datetime}
-                    onChange={handleChange}
-                /></div>
-            </div>
+            
             <button type="submit" className="btn btn-primary">Submit</button>
         </form>
         </>
