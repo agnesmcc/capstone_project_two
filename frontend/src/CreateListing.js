@@ -1,4 +1,4 @@
-import {React, useState} from "react";
+import {React, useState, useEffect} from "react";
 import Api from "./Api";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +11,16 @@ const CreateListing = () => {
         category: "",
     };
     const [formData, setFormData] = useState(initialFormState);
+    const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const res = await Api.getCategories();
+            setCategories(res.categories);
+        };
+        fetchCategories();
+    }, []);
 
     const handleChange = (e) => {
         setFormData({
@@ -72,15 +81,21 @@ const CreateListing = () => {
             </div>
             <div className="form-group row mb-3">
                 <label htmlFor="category" className="col-sm-3 col-form-label">Category</label>
-                <div className="col-sm-8"><input
-                    className="form-control"
-                    type="text"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                /></div>
+                <div className="col-sm-8">
+                    <select
+                        className="form-control"
+                        name="category"
+                        value={formData.category}
+                        onChange={handleChange}
+                    >
+                        <option value="">Select a category</option>
+                        {categories.map(category => (
+                            <option key={category.title} value={category.title}>{category.title}</option>
+                        ))}
+                    </select>
+                </div>
             </div>
-            
+
             <button type="submit" className="btn btn-primary">Submit</button>
         </form>
         </>

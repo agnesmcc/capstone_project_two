@@ -126,6 +126,12 @@ class Api {
     let res = await this.request(`listings/sold_by/${username}`);
     return res;
   }
+
+  /** get all categories **/
+  static async getCategories() {
+    let res = await this.request(`categories`);
+    return res;
+  }
 }
 
 export default Api;
