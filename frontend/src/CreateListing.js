@@ -69,16 +69,7 @@ const CreateListing = () => {
                     onChange={handleChange}
                 /></div>
             </div>
-            <div className="form-group row mb-3">
-                <label htmlFor="starting_bid" className="col-sm-3 col-form-label">Starting Bid</label>
-                <div className="col-sm-8"><input
-                    className="form-control"
-                    type="text"
-                    name="starting_bid"
-                    value={formData.starting_bid}
-                    onChange={handleChange}
-                /></div>
-            </div>
+            
             <div className="form-group row mb-3">
                 <label htmlFor="category" className="col-sm-3 col-form-label">Category</label>
                 <div className="col-sm-8">
