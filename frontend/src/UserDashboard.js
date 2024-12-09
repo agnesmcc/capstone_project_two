@@ -11,7 +11,7 @@ const getDashboardListings = async (username) => {
     let res = await Api.getWatchedListings(username);
     console.log('watching', res);
     data.watchedListings = res;
-    res = await Api.getListingsBidOn(username);
+    res = await Api.getListingsBidOn(username, true);
     console.log('bidding on', res);
     data.listingsBidOn = res;
     res = await Api.getWonListings(username);

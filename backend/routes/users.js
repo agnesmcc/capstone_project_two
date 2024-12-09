@@ -54,7 +54,8 @@ router.get("/:username/watches/:listing_id", ensureCorrectUserOrAdmin, async fun
 
 router.get("/:username/bidding_on", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
-        const result = await User.isBiddingOn(req.params.username);
+        console.log(req.query);
+        const result = await User.isBiddingOn(req.params.username, req.query.onlyActive);
         return res.json(result);
     } catch (err) {
         return next(err);

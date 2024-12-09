@@ -104,8 +104,8 @@ class Api {
   }
 
   /** get listings bid on by user **/
-  static async getListingsBidOn(username) {
-    let res = await this.request(`users/${username}/bidding_on`);
+  static async getListingsBidOn(username, onlyActive) {
+    let res = await this.request(`users/${username}/bidding_on`, { "onlyActive": true });
     return res;
   }
 

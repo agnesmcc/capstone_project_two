@@ -120,12 +120,16 @@ class User {
         }
     }
 
-    static async isBiddingOn(username) {
-        const result = await db.query(
-            `SELECT DISTINCT l.id, l.created_by, l.title, l.description, l.image, l.starting_bid, l.category, l.end_datetime
+    static async isBiddingOn(username, onlyActive=false) {
+        let query = `SELECT DISTINCT l.*
              FROM bidders b
              JOIN listings l ON b.listing_id = l.id
-             WHERE b.bidder = $1`,
+             WHERE b.bidder = $1`
+        if (onlyActive) {
+            query += ` AND l.ended = false`
+        }
+        const result = await db.query(
+            query,
             [username]
         )
         return result.rows
