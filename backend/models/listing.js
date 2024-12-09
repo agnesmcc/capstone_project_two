@@ -129,7 +129,7 @@ class Listing {
         const result = await db.query(
             `SELECT l.*
              FROM listings l
-             WHERE l.created_by = $1 AND l.ended = true`,
+             WHERE l.created_by = $1 AND l.winner IS NOT NULL AND l.ended = true`,
             [username]
         )
         return result.rows;
