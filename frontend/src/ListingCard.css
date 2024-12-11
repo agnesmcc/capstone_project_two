@@ -3,11 +3,16 @@
     background-color: rgb(245, 245, 245);
     padding: 10px;
     margin: 10px;
-    width: 400px;
+    width: 250px;
     border-radius: 10px;
     text-align: left;
 }
 
 .listing-card-starting-bid {
     margin-top: 10px;
+}
+
+.listing-card-img-top {
+    width: 200px;
+    border-radius: 5px;
 }
