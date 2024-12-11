@@ -170,4 +170,50 @@ describe("User", () => {
         const result = await User.isBiddingOn("testUser");
         expect(result[0].id).toEqual(listing.id);
     })
+
+    test("editUser", async () => {
+        await User.register({
+            username: "testUser",
+            firstName: "first",
+            lastName: "last",
+            password: "p@ssword",
+            email: "test@test"
+        });
+        const result = await User.edit("testUser", {
+            firstName: "updatedFirst",
+            lastName: "updatedLast",
+            email: "updatedtest@test"
+        });
+        expect(result).toEqual({
+            username: "testUser",
+            firstName: "updatedFirst",
+            lastName: "updatedLast",
+            email: "updatedtest@test"
+        });
+    })
+
+    test("updatePassword", async () => {
+        await User.register({
+            username: "testUser",
+            firstName: "first",
+            lastName: "last",
+            password: "p@ssword",
+            email: "test@test"
+        });
+        let result = await User.updatePassword("testUser", "newPassword");
+        expect(result).toEqual({
+            username: "testUser",
+            firstName: "first",
+            lastName: "last",
+            email: "test@test"
+        });
+        result = await User.authenticate("testUser", "newPassword");
+        expect(result).toEqual({
+            username: "testUser",
+            firstName: "first",
+            lastName: "last",
+            email: "test@test",
+            isAdmin: false
+        })
+    })
 })

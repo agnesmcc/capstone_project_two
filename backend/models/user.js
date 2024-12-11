@@ -80,6 +80,37 @@ class User {
       return user;
     }
 
+    static async edit(username, { firstName, lastName, email }) {
+        const result = await db.query(
+            `UPDATE users
+             SET first_name = $2,
+                 last_name = $3,
+                 email = $4
+             WHERE username = $1
+             RETURNING username, first_name AS "firstName", last_name AS "lastName", email`,
+            [username, firstName, lastName, email]
+        );
+        if (result.rows.length === 0) {
+            throw new NotFoundError(`No user: ${username}`);
+        }
+        return result.rows[0];
+    }
+
+    static async updatePassword(username, password) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const result = await db.query(
+            `UPDATE users
+             SET password = $2
+             WHERE username = $1
+             RETURNING username, first_name AS "firstName", last_name AS "lastName", email`,
+            [username, hashedPassword]
+        );
+        if (result.rows.length === 0) {
+            throw new NotFoundError(`No user: ${username}`);
+        }
+        return result.rows[0];
+    }
+
     static async delete(username) {
         const result = await db.query(
             `DELETE FROM users WHERE username = $1 RETURNING username`,
