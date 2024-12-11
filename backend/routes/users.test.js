@@ -250,4 +250,104 @@ describe('User', () => {
             expect(res.statusCode).toEqual(401);
         })
     });
+
+    describe("PATCH /users/:username", () => {
+        test("works with admin token", async () => {
+            const res = await request(app)
+                .patch("/users/u1")
+                .set({ Authorization: `Bearer ${adminToken}` })
+                .send({
+                    firstName: "U1F2",
+                    lastName: "U1L",
+                    email: "user1@user.com"
+                });
+            expect(res.body).toEqual({
+                user: {
+                    username: "u1",
+                    firstName: "U1F2",
+                    lastName: "U1L",
+                    email: "user1@user.com"
+                }
+            });
+        });
+
+        test("works with matching user token", async () => {
+            const res = await request(app)
+                .patch("/users/u1")
+                .set({ Authorization: `Bearer ${u1Token}` })
+                .send({
+                    firstName: "U1F2",
+                    lastName: "U1L",
+                    email: "user1@user.com"
+                });
+            expect(res.body).toEqual({
+                user: {
+                    username: "u1",
+                    firstName: "U1F2",
+                    lastName: "U1L",
+                    email: "user1@user.com"
+                }
+            });
+        });
+
+        test("unauth with non-matching user token", async () => {
+            const res = await request(app)
+                .patch("/users/u1")
+                .set({ Authorization: `Bearer ${u2Token}` })
+                .send({
+                    firstName: "U1F2",
+                    lastName: "U1L",
+                    email: "user1@user.com"
+                });
+            expect(res.statusCode).toEqual(401);
+        });
+    });
+
+    describe("PATCH /users/:username/password", () => {
+        test("works with admin token", async () => {
+            const res = await request(app)
+                .patch("/users/u1/password")
+                .set({ Authorization: `Bearer ${adminToken}` })
+                .send({
+                    password: "user1Password2"
+                });
+            expect(res.body).toEqual({
+                user: {
+                    username: "u1",
+                    firstName: "U1F",
+                    lastName: "U1L",
+                    email: "user1@user.com"
+                }
+            });
+            await User.authenticate("u1", "user1Password2");
+        });
+
+        test("works with matching user token", async () => {
+            const res = await request(app)
+                .patch("/users/u1/password")
+                .set({ Authorization: `Bearer ${u1Token}` })
+                .send({
+                    password: "user1Password2"
+                });
+            expect(res.body).toEqual({
+                user: {
+                    username: "u1",
+                    firstName: "U1F",
+                    lastName: "U1L",
+                    email: "user1@user.com"
+                }
+            });
+            await User.authenticate("u1", "user1Password2");
+        });
+
+        test("unauth with non-matching user token", async () => {
+            const res = await request(app)
+                .patch("/users/u1/password")
+                .set({ Authorization: `Bearer ${u2Token}` })
+                .send({
+                    password: "user1Password2"
+                });
+            expect(res.statusCode).toEqual(401);
+        });
+    });
 });

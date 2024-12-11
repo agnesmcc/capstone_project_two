@@ -25,6 +25,24 @@ router.post("/", ensureAdmin, async function (req, res, next) {
     }
 });
 
+router.patch("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
+    try {
+        const user = await User.edit(req.params.username, req.body);
+        return res.json({ user });
+    } catch (err) {
+        return next(err);
+    }
+});
+
+router.patch("/:username/password", ensureCorrectUserOrAdmin, async function (req, res, next) {
+    try {
+        const user = await User.updatePassword(req.params.username, req.body.password);
+        return res.json({ user });
+    } catch (err) {
+        return next(err);
+    }
+});
+
 router.delete("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
         await User.delete(req.params.username);
