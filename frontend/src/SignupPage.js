@@ -29,7 +29,7 @@ const SignupPage = ({setToken}) => {
 
     return (
         <>
-        <h3 className="mb-3">Create an account!</h3>
+        <h1 className="mb-3">Create an account!</h1>
         <form className="signuppage-form" onSubmit={handleSubmit}>
             <div className="form-group row mb-3">
                 <label htmlFor="firstName" className="col-sm-3 col-form-label">First Name</label>

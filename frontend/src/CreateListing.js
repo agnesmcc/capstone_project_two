@@ -36,7 +36,7 @@ const CreateListing = () => {
 
     return (
         <>
-        <h3 className="mb-3">Let's list your item.</h3>
+        <h1 className="mb-3">Let's list your item.</h1>
         <form className="loginpage-form" onSubmit={handleSubmit}>
             <div className="form-group row mb-3">
                 <label htmlFor="title" className="col-sm-3 col-form-label">Title</label>

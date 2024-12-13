@@ -24,7 +24,7 @@ const LoginPage = ({setToken}) => {
 
     return (
         <>
-        <h3 className="mb-3">Hello again...</h3>
+        <h1 className="mb-3">Welcome back</h1>
         <form className="loginpage-form" onSubmit={handleSubmit}>
             <div className="form-group row mb-3">
                 <label htmlFor="username" className="col-sm-3 col-form-label">Username</label>
