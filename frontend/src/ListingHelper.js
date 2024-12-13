@@ -4,9 +4,11 @@ const fetchListing = async (user, id) => {
     console.log('fetching listing details');
     let res = await Api.getListing(id);
     console.log(res);
-    let watchResult = await Api.isWatching(user.username, id);
-    console.log(res);
-    res.isWatching = watchResult.isWatching;
+    if (user && user.username) {
+        let watchResult = await Api.isWatching(user.username, id);
+        console.log(res);
+        res.isWatching = watchResult.isWatching;
+    }
     let bids = await Api.getBidsForListing(id);
     console.log(res);
     res.bids = bids;

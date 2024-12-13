@@ -12,10 +12,7 @@ const ListingDetail = () => {
     const { user } = useContext(UserContext);
     const { id } = useParams();
     const { data, error, isLoading, refetch } = useQuery(
-        ['listing', id], () => fetchListing(user, id), {
-            enabled: !!user?.username
-        }
-    );
+        ['listing', id], () => fetchListing(user, id), {});
 
     const watchListing = async (id) => {
         console.log('watching listing');
@@ -40,12 +37,13 @@ const ListingDetail = () => {
                 <img src={data.image} alt={data.title} className="listing-detail-img" />
                 <div className="listing-detail-data">
                     <h5 className="listing-detail-title">{data.title}</h5>
-                    <hr></hr>                
+                    <hr></hr>
+                    <div><b>Seller:</b> {data.created_by}</div>
                     <div>{data.currentBid ? `Current bid: $${data.currentBid}` : "No bids yet"}</div>
                     <div>{data.bids ? data.bids.length : 0} bids</div>
-                    {!data.isWatching ? 
+                    {!data.isWatching ?
                         <button className="btn btn-primary" onClick={() => watchListing(data.id)}>Watch</button>
-                    : 
+                    :
                         <button className="btn btn-secondary" onClick={() => stopWatchingListing(data.id)}>Unwatch</button>
                     }
                     <ListingCountdown end_datetime={data.end_datetime} updateListing={refetch} />

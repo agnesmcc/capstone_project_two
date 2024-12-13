@@ -10,10 +10,7 @@ const ListingCard = ({ listing }) => {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
     const { data, error, isLoading } = useQuery(
-        ['listing', listing.id], () => fetchListing(user, listing.id), {
-            enabled: !!user?.username
-        }
-    );
+        ['listing', listing.id], () => fetchListing(user, listing.id), {});
 
     const handleClick = () => {
         navigate(`/listings/${listing.id}`);
