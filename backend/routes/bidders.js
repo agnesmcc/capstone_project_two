@@ -24,7 +24,7 @@ router.get("/by-username/:username", ensureCorrectUserOrAdmin, async function (r
     }
 });
 
-router.get("/by-listing-id/:listing_id", ensureLoggedIn,async function (req, res, next) {
+router.get("/by-listing-id/:listing_id", async function (req, res, next) {
     try {
         const bidders = await Bidder.getBidsByListingId(req.params.listing_id);
         return res.json({ bidders });
