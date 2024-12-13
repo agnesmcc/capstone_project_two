@@ -6,6 +6,7 @@ CREATE DATABASE ebid;
 \connect ebid
 
 \i ebid-schema.sql
+\i ebid-seed.sql
 
 \echo 'Delete and recreate ebid_test db?'
 \prompt 'Return for yes or control-C to cancel > ' foo
