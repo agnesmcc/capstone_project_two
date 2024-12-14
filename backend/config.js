@@ -5,7 +5,8 @@ require("dotenv").config();
 require("colors");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
-const LISTING_DURATION_SECONDS = 7 * 24 * 60 * 60; // 7 days
+// const LISTING_DURATION_SECONDS = 7 * 24 * 60 * 60; // 7 days
+const LISTING_DURATION_SECONDS = 5 * 60;
 const JOB_QUEUE = "listingsToEnd";
 const FAKE_DATA_QUEUE = "generateFakeData";
 const PG_BOSS_ENABLED = process.env.PG_BOSS_ENABLED || true;

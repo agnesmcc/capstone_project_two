@@ -8,7 +8,7 @@ boss.start();
 boss.createQueue(JOB_QUEUE);
 boss.createQueue(FAKE_DATA_QUEUE);
 
-boss.schedule(FAKE_DATA_QUEUE, `* * * * *`, null)
+boss.schedule(FAKE_DATA_QUEUE, `*/5 * * * *`, null)
 
 boss.work(JOB_QUEUE, async ([job]) => {
   console.log('processing job', job.id);
