@@ -132,6 +132,18 @@ class Api {
     let res = await this.request(`categories`);
     return res;
   }
+
+  /** update user profile **/
+  static async updateProfile(username, data) {
+    let res = await this.request(`users/${username}`, data, "patch");
+    return res;
+  }
+
+  /** change user password **/
+  static async changePassword(username, data) {
+    let res = await this.request(`users/${username}/password`, data, "patch");
+    return res;
+  }
 }
 
 export default Api;

@@ -18,6 +18,7 @@ const NavigationBar = ({setToken}) => {
                 <>
                 <NavItem><NavLink className="nav-link" to="/create_listing">Create Listing</NavLink></NavItem>
                 <NavItem><NavLink className="nav-link" to="/user_dashboard">My Dashboard</NavLink></NavItem>
+                <NavItem><NavLink className="nav-link" to="/edit_profile">Edit Profile</NavLink></NavItem>
                 <NavItem><NavLink className="nav-link" onClick={() => setToken(null)} to="/">Logout</NavLink></NavItem>
                 </>
             :

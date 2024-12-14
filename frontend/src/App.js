@@ -12,6 +12,7 @@ import SignupPage from "./SignupPage";
 import useLocalStorage from "./useLocalStorage";
 import { UserProvider } from "./UserContext";
 import UserDashboard from "./UserDashboard";
+import EditProfile from "./EditProfile";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -19,7 +20,7 @@ function App() {
   const [token, setToken] = useLocalStorage('token', null);
   Api.token = token;
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     ['user', token],
     () => {
       console.log('fetching user');
@@ -45,6 +46,7 @@ function App() {
           <Route exact path="/" element={<Home setToken={setToken}/>} />
           <Route path="/login" element={<LoginPage setToken={setToken}/>} />
           <Route path="/signup" element={<SignupPage setToken={setToken}/>} />
+          <Route path="/edit_profile" element={<EditProfile updateUser={refetch}/>} />
           <Route path="/create_listing" element={<CreateListing/>} />
           <Route path="/listings/:id" element={<ListingDetail/>} />
           <Route path="/user_dashboard" element={<UserDashboard/>} />
