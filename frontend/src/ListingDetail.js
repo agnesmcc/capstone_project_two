@@ -41,13 +41,13 @@ const ListingDetail = () => {
                     <div><b>Seller:</b> {data.created_by}</div>
                     <div>{data.currentBid ? `Current bid: $${data.currentBid}` : "No bids yet"}</div>
                     <div>{data.bids ? data.bids.length : 0} bids</div>
-                    {!data.isWatching ?
+                    {user && !data.isWatching ?
                         <button className="btn btn-primary" onClick={() => watchListing(data.id)}>Watch</button>
                     :
-                        <button className="btn btn-secondary" onClick={() => stopWatchingListing(data.id)}>Unwatch</button>
+                        user && <button className="btn btn-secondary" onClick={() => stopWatchingListing(data.id)}>Unwatch</button>
                     }
                     <ListingCountdown end_datetime={data.end_datetime} updateListing={refetch} />
-                    {!data.ended && <ListingDetailBidForm listingId={data.id} updateListing={refetch} />}
+                    {user && !data.ended && <ListingDetailBidForm listingId={data.id} updateListing={refetch} />}
                 </div>
             </div>
             <div className="listing-detail-description"><b>Item description from the seller</b></div>
