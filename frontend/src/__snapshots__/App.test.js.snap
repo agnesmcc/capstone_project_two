@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders App using MemoryRouter 1`] = `
+<div>
+  <div>
+    <div>
+      <nav
+        class="navbar"
+      >
+        <div
+          class="container-fluid"
+        >
+          <a
+            aria-current="page"
+            class="active"
+            href="/"
+          >
+            <a
+              class="navbar-brand"
+            >
+              eBid
+            </a>
+          </a>
+          <ul
+            class="nav"
+          >
+            <li
+              class="nav-item"
+            >
+              <a
+                class="nav-link"
+                href="/login"
+              >
+                Login
+              </a>
+            </li>
+            <li
+              class="nav-item"
+            >
+              <a
+                class="nav-link"
+                href="/signup"
+              >
+                Signup
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div>
+      <div>
+        <div
+          class="listings"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
