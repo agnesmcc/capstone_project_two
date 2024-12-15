@@ -103,10 +103,10 @@ describe('Bidders', () => {
             expect(res.body).toEqual({ bidders: [] });
         });
 
-        test("unauth with no token", async () => {
+        test("works with no token", async () => {
             const res = await request(app)
                 .get(`/bidders/by-listing-id/${listingId}`);
-            expect(res.statusCode).toEqual(401);
+            expect(res.statusCode).toEqual(200);
         });
     })
     

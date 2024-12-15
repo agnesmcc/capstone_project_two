@@ -24,7 +24,6 @@ class Listing {
             [listing.created_by, listing.title, listing.description, listing.image, listing.category, endDatetime]
         );
 
-        console.log(process.env.PG_BOSS_ENABLED);
         if (PG_BOSS_ENABLED === true && result.rows.length > 0) {
             console.log(result.rows[0]);
             const jobId = await boss.sendAfter('listingsToEnd', {listingId: result.rows[0].id}, {}, listingDuration);

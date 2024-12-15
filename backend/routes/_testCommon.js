@@ -65,6 +65,17 @@ async function commonAfterEach() {
 }
 
 async function commonAfterAll() {
+  // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM bidders");
+  // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM watched_listings");
+  // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM listings");
+  // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM users");  
+  // noinspection SqlWithoutWhere
+  await db.query("DELETE FROM categories");
+
   await db.end();
 }
 
