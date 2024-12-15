@@ -9,7 +9,7 @@ const SECRET_KEY = process.env.SECRET_KEY || "secret-dev";
 const LISTING_DURATION_SECONDS = 5 * 60;
 const JOB_QUEUE = "listingsToEnd";
 const FAKE_DATA_QUEUE = "generateFakeData";
-const PG_BOSS_ENABLED = process.env.PG_BOSS_ENABLED || true;
+const PG_BOSS_ENABLED = process.env.NODE_ENV === "test" ? false : process.env.PG_BOSS_ENABLED || true;
 const FAKE_USERS = ["johnDoe", "janeDoe", "bobSmith"];
 
 const PORT = +process.env.PORT || 3001;
