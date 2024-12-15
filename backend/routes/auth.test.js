@@ -12,6 +12,7 @@ describe('User', () => {
     });
 
     afterAll(async () => {
+        await db.query("DELETE FROM users");
         await db.end();
     });
 
