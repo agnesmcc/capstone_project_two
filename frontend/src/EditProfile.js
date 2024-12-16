@@ -3,7 +3,7 @@ import Api from "./Api";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 
-const SignupPage = ({updateUser}) => {
+const EditProfile = ({updateUser}) => {
     const { user } = useContext(UserContext);
     const initialFormState = {
         password: "",
@@ -32,7 +32,7 @@ const SignupPage = ({updateUser}) => {
     return (
         <>
         <h1 className="mb-3">Update your profile</h1>
-        <form className="signuppage-form" onSubmit={handleSubmit}>
+        <form className="edit-profile-form" onSubmit={handleSubmit}>
             <div className="form-group row mb-3">
                 <label htmlFor="firstName" className="col-sm-3 col-form-label">First Name</label>
                 <div className="col-sm-8"><input
@@ -81,4 +81,4 @@ const SignupPage = ({updateUser}) => {
     );
 };
 
-export default SignupPage;
+export default EditProfile;
