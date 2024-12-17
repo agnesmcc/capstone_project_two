@@ -3,6 +3,14 @@ import Api from "./Api";
 import { useNavigate } from "react-router-dom";
 
 
+/**
+ * LoginPage component. Renders a login form. When the form is submitted,
+ * sends the form data to the login API endpoint. If the login is successful,
+ * sets the token in local storage and navigates to the root route.
+ *
+ * @param {function} setToken - function to set the token in local storage
+ * @returns {JSX.Element} - a login form
+ */
 const LoginPage = ({setToken}) => {
     const initialFormState = {username: "", password: ""};
     const [formData, setFormData] = useState(initialFormState);

@@ -5,6 +5,17 @@ import { UserContext } from "./UserContext";
 import { useQuery } from "react-query";
 import "./UserDashboard.css";
 
+/**
+ * Fetches various types of listings associated with a user.
+ * 
+ * @param {string} username - The username of the user whose listings are to be fetched.
+ * @returns {Object} An object containing:
+ * - watchedListings: Listings the user is watching.
+ * - listingsBidOn: Listings the user has bid on.
+ * - wonListings: Listings the user has won.
+ * - soldListings: Listings the user has sold.
+ */
+
 const getDashboardListings = async (username) => {
     let data = {};
     console.log('dashboard listings for', username);
@@ -23,6 +34,14 @@ const getDashboardListings = async (username) => {
     return data;
 }
 
+/**
+ * UserDashboard component.
+ * 
+ * Fetches the various types of listings associated with the user in the UserContext
+ * and renders them in a series of UserDashboardDetail components.
+ * 
+ * @returns {JSX.Element} A JSX element representing the user dashboard.
+ */
 const UserDashboard = () => {
     const { user } = useContext(UserContext);
     const { data, error, isLoading } = useQuery(
