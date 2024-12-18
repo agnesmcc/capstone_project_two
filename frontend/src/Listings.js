@@ -3,9 +3,17 @@ import Api from "./Api";
 import ListingCard from "./ListingCard";
 import "./Listings.css";
 
+    /**
+     * Renders a list of listings.
+     * 
+     * Fetches the list of listings from the server on mount.
+     * 
+     * @returns {JSX.Element}
+     */
 const Listings = () => {
     const [listings, setListings] = useState([]);
 
+    // Gets all active listings
     const fetchListings = async () => {
         let res = await Api.getListings();
         setListings(res.listings);

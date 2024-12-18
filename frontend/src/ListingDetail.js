@@ -8,6 +8,13 @@ import ListingDetailBidForm from "./ListingDetailBidForm";
 import fetchListing from "./ListingHelper";
 import ListingCountdown from "./ListingCountdown";
 
+/**
+ * A component that displays a listing detail page, including the title, image,
+ * and description of the listing, as well as the current bid, number of bids,
+ * and buttons to watch/unwatch the listing. If the user is logged in and the
+ * listing has not ended, it also displays a countdown and a form to place a
+ * bid.
+ */
 const ListingDetail = () => {
     const { user } = useContext(UserContext);
     const { id } = useParams();

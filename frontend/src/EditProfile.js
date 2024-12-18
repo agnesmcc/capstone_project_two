@@ -3,6 +3,15 @@ import Api from "./Api";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 
+/**
+ * EditProfile component.
+ * 
+ * Renders a form with fields for the user's first name, last name, email, and a new password.
+ * When the form is submitted, updates the user's profile and password in the database.
+ * 
+ * @param {function} updateUser a function to update the user in the UserContext
+ * @returns {JSX.Element} A JSX element representing the edit profile form.
+ */
 const EditProfile = ({updateUser}) => {
     const { user } = useContext(UserContext);
     const initialFormState = {

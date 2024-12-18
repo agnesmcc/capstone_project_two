@@ -2,6 +2,14 @@ import {React, useState} from "react";
 import Api from "./Api";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * SignupPage is a component that renders a form to create a new user. When the form is
+ * submitted, sends the form data to the register API endpoint. If the registration is
+ * successful, sets the token in local storage and navigates to the root route.
+ * 
+ * @param {function} setToken - a function to set the token in local storage
+ * @returns {JSX.Element} - a form to create a new user
+ */
 const SignupPage = ({setToken}) => {
     const initialFormState = {
         username: "", 

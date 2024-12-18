@@ -19,18 +19,23 @@ import "./UserDashboard.css";
 const getDashboardListings = async (username) => {
     let data = {};
     console.log('dashboard listings for', username);
+    
     let res = await Api.getWatchedListings(username);
     console.log('watching', res);
     data.watchedListings = res;
+
     res = await Api.getListingsBidOn(username, true);
     console.log('bidding on', res);
     data.listingsBidOn = res;
+
     res = await Api.getWonListings(username);
     console.log('won', res.listings);
     data.wonListings = res.listings;
+
     res = await Api.getSoldListings(username);
     console.log('sold', res.listings);
     data.soldListings = res.listings;
+
     return data;
 }
 

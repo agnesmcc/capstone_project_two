@@ -2,6 +2,14 @@ import { useState, useContext } from "react";
 import Api from "./Api";
 import { UserContext } from "./UserContext";
 
+/**
+ * A form for bidding on a listing. The form will post a bid to the server
+ * when submitted, and will call the updateListing function when the bid is
+ * submitted.
+ * @param {string} listingId - The id of the listing to bid on
+ * @param {function} updateListing - The function to call when the bid is submitted
+ * @return {ReactElement} A form element with a text input and a submit button
+ */
 const ListingDetailBidForm = ({ listingId, updateListing }) => {
     const { user } = useContext(UserContext);
     const initialFormState = {

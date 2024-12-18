@@ -20,6 +20,7 @@ function App() {
   const [token, setToken] = useLocalStorage('token', null);
   Api.token = token;
 
+  // If a token is provided fetch information about the user
   const { data, isLoading, refetch } = useQuery(
     ['user', token],
     () => {
@@ -39,6 +40,7 @@ function App() {
   const user = data ? data : null;
 
   return (
+    // Update the UserProvider with information about the user
     <UserProvider token={token} user={user}>
     <div>
         <NavigationBar setToken={setToken}/>

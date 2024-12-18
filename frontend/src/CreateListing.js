@@ -2,6 +2,14 @@ import {React, useState, useEffect} from "react";
 import Api from "./Api";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Renders a form to create a new listing. The form includes fields for title,
+ * description, image, and category. When the form is submitted, sends the form
+ * data to the create listing API endpoint. If the listing is successfully
+ * created, navigates to the root route.
+ *
+ * @returns {JSX.Element} - a form to create a new listing
+ */
 const CreateListing = () => {
     const initialFormState = {
         title: "", 
