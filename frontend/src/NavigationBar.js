@@ -18,9 +18,7 @@ const NavigationBar = ({setToken}) => {
     return (
         <div>
         <Navbar>
-        <NavLink to="/" replace>
-            <NavbarBrand>eBid</NavbarBrand>
-        </NavLink>
+            <NavbarBrand href="/">eBid</NavbarBrand>
             <Nav>
             { user ?
                 <>
