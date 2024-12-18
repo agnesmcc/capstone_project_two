@@ -15,6 +15,12 @@ const { boss } = require('./pgBoss');
     if (PG_BOSS_ENABLED === true) {
       await boss.schedule(FAKE_DATA_QUEUE, `*/5 * * * *`, null)
 
+      /**
+       * This worker processes jobs from the 'listingsToEnd' queue. Each job
+       * contains the listing id that should be ended. The jobs are added
+       * when a new listing is created and are scheduled to run at the end_datetime
+       * of the listing. When the listing ends a winner is determined if there is one.
+       */
       boss.work(JOB_QUEUE, async ([job]) => {
         console.log('processing job', job.id);
         const Listing = require('./models/listing');
@@ -24,6 +30,14 @@ const { boss } = require('./pgBoss');
         console.log(msg);
       })
 
+      /**
+       * This worker processes jobs from the 'fakeData' queue. Jobs contain
+       * no data and are added on a cron schedule. When a job is processed
+       * it creates a new listing for each user in the FAKE_USERS list.
+       *
+       * For each user, it fetches a random product from the fake store API
+       * and uses that random product to populate data about the fake listing.
+       */
       boss.work(FAKE_DATA_QUEUE, async ([job]) => {
         console.log('processing job', job.id);
         const { FAKE_USERS } = require('./config');
