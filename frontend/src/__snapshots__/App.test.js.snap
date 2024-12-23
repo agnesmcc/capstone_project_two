@@ -11,15 +11,10 @@ exports[`renders App using MemoryRouter 1`] = `
           class="container-fluid"
         >
           <a
-            aria-current="page"
-            class="active"
+            class="navbar-brand"
             href="/"
           >
-            <a
-              class="navbar-brand"
-            >
-              eBid
-            </a>
+            eBid
           </a>
           <ul
             class="nav"

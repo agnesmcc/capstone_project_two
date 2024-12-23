@@ -6,15 +6,22 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
 
-test('renders App using MemoryRouter', () => {
-  const { container } = render(
-    <MemoryRouter initialEntries={['/']}>
-      <UserProvider>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-      </UserProvider>
-    </MemoryRouter>
-  );
+const { container } = render(
+  <MemoryRouter initialEntries={['/']}>
+    <UserProvider>
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+    </UserProvider>
+  </MemoryRouter>
+);
+
+test('renders App using MemoryRouter', () => {  
   expect(container).toMatchSnapshot();
 });
+
+// test('clicking on Signup navigates to the signup page', () => {
+//   const signupLink = screen.getByText('Signup');
+//   signupLink.click();
+//   expect(window.location.pathname).toBe('/signup');
+// });
