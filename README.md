@@ -10,7 +10,7 @@ The Postgres database is hosted on Supabase.
 A simple clone of eBay using a nodejs backend and React frontend.
 
 ## Features implemented
-Basic functionality was added to make this appear as eBay. Users can create listings. They can watch and bid on listings. Listings eventually expire, and if there are any bids, a winner is decided. Users can also access a dashboard that shows alll listings they are watching, bidding on, have won, or have sold.
+Basic functionality was added to make this appear as eBay. Users can create listings. They can watch and bid on listings. Listings eventually expire, and if there are any bids, a winner is decided. Users can also access a dashboard that shows all listings they are watching, bidding on, have won, or have sold.
 
 ## Basic user flow
 1. User registers or logs in.
